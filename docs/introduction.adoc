@@ -1,0 +1,168 @@
+== {prodname} in a Nutshell
+
+{prodname} was written to help getting better visibility and understanding of what is happening in the software products' application layer during runtime.
+
+{prodname} is an abbreviation for *A* ll *P* urpose *Ex* traction Toolkit.
+
+=== Foreword: Visibility creates Awareness
+
+When first discussing and prototyping {prodname} we were looking to establish a better monitoring of our Java based applications.
+Too often we have seen software and projects getting out of control because nobody could get a clue what was really going on inside in detail.
+Reading the logs was not sufficient because the information we looked for was like searching the needle in the haystack - or worse - it simply was not put out.
+
+As a result our most important KPI - Mean Time to Resolution (MTTR) - was simply too high because of low visibility caused by ineffective tooling.
+
+Our finding was:
+
+. You cannot get aware of a problem if it is not visible.
+. Without awareness you have no chance to react proactively.
+. Without the ability to act you make your customers ring the bell first.
+
+Of course you can add debug and logging code, use JMX, btrace and other tools.
+And there are quite obvious methods like remote debugging the JVM - surely a good choice but not applicable everywhere.
+But we were searching for a more convenient way.
+
+This was our first leap towards {prodname} - establishing a highly adaptable monitoring tool.
+After lots of talk we discovered that we have had created something more generic than we realized and were touching multiple scenarios of interest: runtime monitoring, debugging, advanced testing and business analysis.
+
+We decided to take a step back from our initial intent and refactor and share the {prodname} framework components on Github so others can benefit.
+In the future we plan to develop services that are based on this framework.
+
+
+=== Technical Approach
+
+The basic idea is to hook into an existing code base without cluttering it with log statements or debug code and directly participate on code execution right on the spot. We do this by instrumenting classes when they get loaded in the classloader and installing _handler hooks_ at specific locations with the _Javassist_ framework.
+
+
+The handler hooks can be configured to execute prebuilt and custom handler classes that execute specific tasks.
+For instance you can measure code executions and store the results to a metrics reservoir.
+Or you can inject a generic dumper that spills out the current scope to the log.
+We also provide a handler which can execute arbitrary groovy code.
+
+Additionally there is a metric & event messaging component that can be used by the handlers to transport information to a service endpoint.
+
+=== Component Overview
+
+{prodname} consists of couple of components. Some are mandatory, some are optional. Lets take a look around.
+
+
+==== Collector
+
+This Java agent is used to connect to the target application and control the instrumentation of the code.
+It is attached to the JVM and will download instrumentation configs from the repository first and then inject the hooks once target classes get loaded by the application.
+
+===== Handlers
+
+Handlers are part of the instrumentation instructions and tell the collector what to do when the application code executes the placed hooks.
+Handlers are part of the SDK and intended to be expanded/extended by the user community.
+
+Currently we have a very small set of handlers available that serve different purposes.
+
+.Measuring Performance
+The `BasicPerformanceHandler` will  measure a method body execution timing. We use dropwizard metrics to store and aggregate timers and histograms. See http://metrics.dropwizard.io/ for more details.
+
+.Tracking Execution Context
+The `BasicContextDumpHandler` can be used on methods to dump the current state of all signature variables _before_ and _after_ method body execution.
+
+.Generic Class Access
+The `BasicScriptedHandler` is probably the most powerful handler.
+It enables to run groovy scripts using a method callback.
+In that callback you have access to the so called _AdvisorContext_ which includes the current class instance, the method arguments and the _service message object_ to fill with metadata and object maps.
+
+
+.An example:
+[source,java]
+----
+// A simple groovy script that gets executed on each instrumented method call
+def execute(){
+    println("method executed")
+
+    // we have some implicit objects here like 'context'  AdvisorContext containing e.g
+    // the instrumented instance
+    def instance = context.getInstance()
+
+    // message - our message object for apex
+    message.addField("msg", "Foo? Bar!")
+
+    // you can execute methods ...
+    message.addField("something", instance.sampleField.getSomething());
+
+    // ... or fields ...
+    message.addField("somethingElse", instance.somethingElse);
+
+    // ... and also log to sysout, quick and dirty
+    println("instance:" + context.instance);
+
+    // we could also access the method arguments via 'args' and 'argsCount'
+    // “ the number of arguments in the signature
+    // arg1 ... argN the arguments
+    println("arg 1:" + arg1.toString())
+
+    // the message object will now be sent to the apex service for further processing.
+
+}
+----
+
+===== Messaging
+
+Gathered data has to be forwarded to the service to make use of it.
+Currently, two methods are available: AMQP based messaging (e.g. using rabbitMQ) and REST based webservices.
+
+==== Instrumentation Configuration
+
+In order to tell the collector what on how to instrument the target system the agent will connect to a specified git repository and clone the instructions to the local system.
+
+The repository has a specific layout that needs to be followed. The directory structure follows the pattern
+
+`/<artifact name>/<user-package>/<artifact version>/`, e.g.
+`/minecraft/io.verticle.apex.minecraft/0.1/`
+or
+`/jenkins/com.foo.bar/2.1/`.
+
+Inside this directory there are a couple of noteworthy files:
+
+* `meta.json` - package descriptor file
+* `<metricqualifier>.json` - instrumentation definition file (per qualified metric)
+* `<metricqualifier>.groovy` - optional groovy script for a `BasicScriptedHandler`
+
+
+
+
+==== Instrumentation Repository
+
+This Github based repo is supposed to store ready-to-use instrumentations for common software products. It is designed as contribution catalog and will be extended gradually using PRs. If you have some neat instrumentation configuration built for {prodname} - this is the place to share.
+
+It also houses a configuration template to help you start creating your own. Simply fork the repo on Github and adjust existing configs to your needs.
+
+
+==== {prodname} Service
+
+This is the data sink where collectors send their gathered data to. We are providing two different approaches here:
+
+* Roll your own by cloning our Spring Boot template project on Github (https://github.com/verticle-io/apex-service-template). Messaging is already in and you can extend it to your needs.
+* Use our upcoming cloud service offering which is currently prepared for beta.
+
+== System requirements
+
+=== for the target machine
+
+.JVM
+{prodname} packages use JVM features like java agents and instrumentation.
+
+You will need a Sun/Oracle JDK version >= 8.
+
+NOTE: The code is currently developed for Java 8. We will backport parts of it to make it run smoothly with previous version up to Java 1.5
+
+.git
+The collector is using git to access his instrumentations.
+
+
+=== for the service machine
+
+In case you build your own service based on our service template you will need:
+
+.JVM
+You will need a Sun/Oracle JDK version >= 8.
+
+.MVN
+The build is based on maven. Either install the lastest version or use the wrapper mvnw.

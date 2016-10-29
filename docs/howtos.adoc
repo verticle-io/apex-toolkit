@@ -1,0 +1,39 @@
+
+== User guide and Howtos
+
+=== Using the Instrumentation Repository on GitHub
+
+* fork the repository or use the original
+* git sparse checkout
+*
+
+=== Contributing to the Instrumentation Repository on GitHub
+
+=== Creating a private Instrumentation Repository
+
+* cloning the template
+* initializing a new repository
+
+=== Creating Instrumentations from Scratch
+
+
+
+=== Creating new Handlers with the SDK
+
+* handler interfaces in the SDK
+* extending existing Handlers
+* packing handlers, jarfiles
+
+=== Writing your own Service
+* the spring boot template
+* where to extend
+
+
+=== Using the apexcloud.io Services
+* services in Beta
+** collector configurer
+** elasticsearch indexer
+** apex shell
+** dashboards
+** event stream
+** event browser

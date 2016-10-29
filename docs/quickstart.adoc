@@ -1,0 +1,64 @@
+
+== Quickstart
+
+If you are in a hurry or just want to try {prodname} this is the guide to follow.
+This guide will take approx. 15 minutes to walk though.
+
+We will setup the `collector`, configure and change instrumentation configuration using the `instrumentation repository` and create a small consuming service using the `apex service template` project.  Our target system of choice will be apache tomcat 8.
+
+NOTE: Instructions are brief. If you want to dig deeper we add hints to other parts of the docs.
+
+=== Preparations
+* create a directory to for the setup. We will call it `APEX_HOME` further on.
+
+==== Retrieve artifacts and configurations
+
+. Download Apache Tomcat 8 (latest) from here: http://tomcat.apache.org/download-80.cgi and extract it to `APEX_HOME/tomcat`.
+
+. Download the latest release of the collector from https://github.com/verticle-io/apex-toolkit/releases and extract it to `APEX_HOME/collector`.
+
+. Fork and clone the instrumentation repository on GitHub.
+** Fork: Head over to https://github.com/verticle-io/apex-instrumentation-repo and click the fork button. We will reference to the fork as `FORKED_REPO`.
+** `cd` to `APEX_HOME`
+** `git clone <FORKED_REPO>.git`
+
+. Finally clone the apex service template.
+** `cd` to `APEX_HOME`
+** `git clone https://github.com/verticle-io/apex-service-template.git`
+
+Your `APEX_HOME` directory now should look like this:
+
+[source, bash]
+-----
+collector
+    /apex-collector-<version>.jar
+    / ...
+
+apex-instrumentation-repo
+    /tomcat/v8/io.verticle.apex.instrumentation.tomcat8/meta.json
+    / ...
+
+apex-service-template
+    /pom.xml
+    /src/main/java
+    / ...
+
+tomcat
+    /bin
+    /webapps
+    / ...
+-----
+
+=== Setup
+
+==== Apply the Collector to Tomcat
+
+#TODO#
+
+==== Configure the Collector
+
+#TODO#
+
+=== Run
+
+#TODO#

@@ -1,0 +1,32 @@
+= APEX Docs
+Author: Jens Saade <jens@verticle.io>
+v1.0, 2016-09
+:toc:
+:page-layout: docs
+:page-permalink: /docs/
+:page-liquid:
+:uri-asciidoctor: http://asciidoctor.org
+:sectnums:
+:sectnumlevels: 4
+:toclevels: 3
+:prodname: APEX
+:toclevels: 2
+:toc-position: left
+
+
+include::docs/introduction.adoc[]
+//include::docs/quickstart.adoc[]
+//include::docs/howtos.adoc[]
+//include::docs/reference.adoc[]
+
+== QuickStart
+
+#WORK_IN_PROGRESS#
+
+== HOWTOs
+
+#WORK_IN_PROGRESS#
+
+== Reference
+
+#WORK_IN_PROGRESS#

@@ -1,0 +1,44 @@
+
+== Reference
+
+=== Instrumenting Class Methods
+
+=== Instrumenting Class Constructors
+
+=== Performance Handler
+
+=== Generic Dump Handler
+
+=== Groovy Script Handler
+
+.Example instrumentation definition
+[source,json]
+----
+{
+  "meta" : {
+    "purpose" : "show minecraft player stats"
+  },
+  "qualifier" : "lifestats",
+  "targetClass" : "net.minecraft.client.entity.EntityPlayerSP",
+  "instrumentationInstructions" : [
+  {
+    "@class" : "io.verticle.apm.agent.instrument.repository.model.instrumentation.InstrumentationInstructionModel",
+    "qualifier" : "entity.health2",
+    "methodName" : "setPlayerSPHealth",
+    "signatureClasses" : [ "float" ],
+    "handlers" : [ {
+      "@class" : "io.verticle.apm.agent.instrument.repository.model.instrumentation.HandlerModel",
+      "handlerClass" : "io.verticle.apm.agent.sdk.handler.BasicScriptedHandler",
+      "options" : {
+        "groovy" : "PlayerHealth.groovy"
+      }
+    } ],
+    "enabled" : true,
+    "constructor" : false
+  } ]
+}
+----
+
+* the meta file
+* the instrumentation file
+* groovy scripts
