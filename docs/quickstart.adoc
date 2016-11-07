@@ -1,37 +1,63 @@
 
 == Quickstart
 
-If you are in a hurry or just want to try {prodname} this is the guide to follow.
 This guide will take approx. 15 minutes to walk though.
 
-We will setup the `collector`, configure and change instrumentation configuration using the `instrumentation repository` and create a small consuming service using the `apex service template` project.  Our target system of choice will be apache tomcat 8.
+We will setup the individual components of the APEX toolkit: Install the `collector`, configure and change instrumentation configuration using the `instrumentation repository` and create a small consuming service using the `apex service template` project.
 
 NOTE: Instructions are brief. If you want to dig deeper we add hints to other parts of the docs.
 
 === Preparations
-* create a directory to for the setup. We will call it `APEX_HOME` further on.
+Create a directory to for the setup. We will call it `<APEX_HOME>` further on.
+
 
 ==== Retrieve artifacts and configurations
 
-. Download Apache Tomcat 8 (latest) from here: http://tomcat.apache.org/download-80.cgi and extract it to `APEX_HOME/tomcat`.
+.Step 1:
+Clone and compile latest release of the collector
 
-. Download the latest release of the collector from https://github.com/verticle-io/apex-toolkit/releases and extract it to `APEX_HOME/collector`.
+[source, bash]
+----
+$> cd <APEX_HOME>
+$> git clone https://github.com/verticle-io/apex-toolkit.git
+$> cd apex-toolkit
+# use the gradle wrapper to compile
+$> ./gradlew shadowJar
+# This will create a fatjar of the collector.
 
-. Fork and clone the instrumentation repository on GitHub.
-** Fork: Head over to https://github.com/verticle-io/apex-instrumentation-repo and click the fork button. We will reference to the fork as `FORKED_REPO`.
-** `cd` to `APEX_HOME`
-** `git clone <FORKED_REPO>.git`
+# Now create a copy of the collector configuration file:
+$> cp apexAgentConfig.properties <APEX_HOME>/myApexAgentConfig.properties
+----
 
-. Finally clone the apex service template.
-** `cd` to `APEX_HOME`
-** `git clone https://github.com/verticle-io/apex-service-template.git`
+.Step 2:
+Fork and clone the instrumentation repository on GitHub.
+Head over to https://github.com/verticle-io/apex-instrumentation-repo and click the fork button. We will reference to the fork as `<FORKED_REPO>`.
 
-Your `APEX_HOME` directory now should look like this:
+[source, bash]
+----
+$> cd <APEX_HOME>
+$> git clone <FORKED_REPO>.git
+----
+
+.Step 3:
+Finally clone and compile the apex service template.
+[source, bash]
+----
+$> cd <APEX_HOME>
+$> git clone https://github.com/verticle-io/apex-service-template.git
+$> cd apex-service-template
+# compile using the maven wrapper
+$> ./mvnw install
+----
+
+
+
+Your `<APEX_HOME>` directory now should look like this:
 
 [source, bash]
 -----
-collector
-    /apex-collector-<version>.jar
+apex-toolkit
+    /build/libs/apex-collector-<version>.jar
     / ...
 
 apex-instrumentation-repo
@@ -42,23 +68,100 @@ apex-service-template
     /pom.xml
     /src/main/java
     / ...
-
-tomcat
-    /bin
-    /webapps
-    / ...
 -----
 
-=== Setup
+Now you are done with the preparations. Lets install and configure APEX to your target application next.
 
-==== Apply the Collector to Tomcat
+=== Installation
 
-#TODO#
+==== Apply the Collector to target
+
+Head over to your target application and add the following params to your JVM:
+[source, bash]
+-----
+-javaagent:/<APEX_HOME>/apex-toolkit/apexAgent/build/libs/apexAgent-0.5-all.jar=/<APEX_HOME>/myApexAgentConfig.properties
+-----
+
+Now your application will load the APEX Collector Agent. Lets configure it's behaviour fist.
+
 
 ==== Configure the Collector
 
+Open the `<APEX_HOME>/myApexAgentConfig.properties` in an editor and adjust the settings.
+
+[source, bash]
+-----
+# AMQP Settings, not relevant for this setup, we will connect via REST
+verticle.apex.mq.server=127.0.0.1
+verticle.apex.mq.server.port=5672
+
+# your APEX service url
+verticle.apex.service.http.url=http://127.0.0.1:9005
+
+# the messaging method, leave it to http
+verticle.apex.service.method=http
+
+# the local cloned repository set this to
+verticle.apex.instrumentation.config.path=<APEX>/repo/
+verticle.apex.instrumentation.remoterepository.uri=https://github.com/verticle-io/apex-instrumentation-repo.git
+verticle.apex.instrumentation.remoterepository.username=user
+verticle.apex.instrumentation.remoterepository.password=pass
+
+# if set to true the local repository will be cloned again on next startup
+verticle.apex.instrumentation.remoterepository.update=true
+-----
+
+=== Configure Instrumentation
+
+Now the tricky part. Which code of the target system do you want to instrument?
+
+Check your <FORKED_REPO> to get an idea on how to attach. Check out the minimal project at `<APEX_HOME>/apex-instrumentation-repo/minimal`.
+
+Open the the `minimal.json` and adjust
+
+* the target class:
 #TODO#
+* the signature classes:
+#TODO#
+
+If the targeting is done right your target application will print out `Foo? Bar!` when the target is executed.
+
+Lets give our installation a spin.
 
 === Run
 
-#TODO#
+.Step 1:
+Start the APEX Service template:
+
+[source, bash]
+----
+$> cd <APEX_HOME>/apex-service-template
+$> ./mvnw spring-boot:run
+----
+
+.Step 2:
+Start your target application
+
+Well, you know best how this works. The logfile should print some APEX related stuff, e.g. configuration bootstrapping:
+
+[source, bash]
+----
+***********************************************************************
+***                     APEX COLLECTOR Configuration                ***
+***********************************************************************
+----
+
+and you shoud see something like
+
+[source, bash]
+----
+<apex> trying to weave ...
+<apex> weaving method ...
+<apex> successfully weaved method ...
+----
+
+And finally our beloved
+[source, bash]
+----
+Foo? Bar!
+----

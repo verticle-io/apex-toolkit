@@ -15,13 +15,11 @@ v1.0, 2016-09
 
 
 include::docs/introduction.adoc[]
-//include::docs/quickstart.adoc[]
+
+include::docs/quickstart.adoc[]
+
 //include::docs/howtos.adoc[]
 //include::docs/reference.adoc[]
-
-== QuickStart
-
-#WORK_IN_PROGRESS#
 
 == HOWTOs
 

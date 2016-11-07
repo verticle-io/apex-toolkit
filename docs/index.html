@@ -64,7 +64,14 @@
 <li><a href="#for-the-service-machine">2.2. for the service machine</a></li>
 </ul>
 </li>
-<li><a href="#quickstart">3. QuickStart</a></li>
+<li><a href="#quickstart">3. Quickstart</a>
+<ul class="sectlevel2">
+<li><a href="#preparations">3.1. Preparations</a></li>
+<li><a href="#installation">3.2. Installation</a></li>
+<li><a href="#configure-instrumentation">3.3. Configure Instrumentation</a></li>
+<li><a href="#run">3.4. Run</a></li>
+</ul>
+</li>
 <li><a href="#howtos">4. HOWTOs</a></li>
 <li><a href="#reference">5. Reference</a></li>
 </ul>
@@ -314,10 +321,217 @@ The code is currently developed for Java 8. We will backport parts of it to make
 </div>
 </div>
 <div class="sect1">
-<h2 id="quickstart">3. QuickStart</h2>
+<h2 id="quickstart">3. Quickstart</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><mark>WORK_IN_PROGRESS</mark></p>
+<p>This guide will take approx. 15 minutes to walk though.</p>
+</div>
+<div class="paragraph">
+<p>We will setup the individual components of the APEX toolkit: Install the <code>collector</code>, configure and change instrumentation configuration using the <code>instrumentation repository</code> and create a small consuming service using the <code>apex service template</code> project.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+Instructions are brief. If you want to dig deeper we add hints to other parts of the docs.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="preparations">3.1. Preparations</h3>
+<div class="paragraph">
+<p>Create a directory to for the setup. We will call it <code>&lt;APEX_HOME&gt;</code> further on.</p>
+</div>
+<div class="sect3">
+<h4 id="retrieve-artifacts-and-configurations">3.1.1. Retrieve artifacts and configurations</h4>
+<div class="paragraph">
+<div class="title">Step 1:</div>
+<p>Clone and compile latest release of the collector</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$&gt; cd &lt;APEX_HOME&gt;
+$&gt; git clone https://github.com/verticle-io/apex-toolkit.git
+$&gt; cd apex-toolkit
+# use the gradle wrapper to compile
+$&gt; ./gradlew shadowJar
+# This will create a fatjar of the collector.
+
+# Now create a copy of the collector configuration file:
+$&gt; cp apexAgentConfig.properties &lt;APEX_HOME&gt;/myApexAgentConfig.properties</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<div class="title">Step 2:</div>
+<p>Fork and clone the instrumentation repository on GitHub.
+Head over to <a href="https://github.com/verticle-io/apex-instrumentation-repo" class="bare">https://github.com/verticle-io/apex-instrumentation-repo</a> and click the fork button. We will reference to the fork as <code>&lt;FORKED_REPO&gt;</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$&gt; cd &lt;APEX_HOME&gt;
+$&gt; git clone &lt;FORKED_REPO&gt;.git</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<div class="title">Step 3:</div>
+<p>Finally clone and compile the apex service template.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$&gt; cd &lt;APEX_HOME&gt;
+$&gt; git clone https://github.com/verticle-io/apex-service-template.git
+$&gt; cd apex-service-template
+# compile using the maven wrapper
+$&gt; ./mvnw install</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Your <code>&lt;APEX_HOME&gt;</code> directory now should look like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">apex-toolkit
+    /build/libs/apex-collector-&lt;version&gt;.jar
+    / ...
+
+apex-instrumentation-repo
+    /tomcat/v8/io.verticle.apex.instrumentation.tomcat8/meta.json
+    / ...
+
+apex-service-template
+    /pom.xml
+    /src/main/java
+    / ...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now you are done with the preparations. Lets install and configure APEX to your target application next.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="installation">3.2. Installation</h3>
+<div class="sect3">
+<h4 id="apply-the-collector-to-target">3.2.1. Apply the Collector to target</h4>
+<div class="paragraph">
+<p>Head over to your target application and add the following params to your JVM:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">-javaagent:/&lt;APEX_HOME&gt;/apex-toolkit/apexAgent/build/libs/apexAgent-0.5-all.jar=/&lt;APEX_HOME&gt;/myApexAgentConfig.properties</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now your application will load the APEX Collector Agent. Lets configure it&#8217;s behaviour fist.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="configure-the-collector">3.2.2. Configure the Collector</h4>
+<div class="paragraph">
+<p>Open the <code>&lt;APEX_HOME&gt;/myApexAgentConfig.properties</code> in an editor and adjust the settings.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"># AMQP Settings, not relevant for this setup, we will connect via REST
+verticle.apex.mq.server=127.0.0.1
+verticle.apex.mq.server.port=5672
+
+# your APEX service url
+verticle.apex.service.http.url=http://127.0.0.1:9005
+
+# the messaging method, leave it to http
+verticle.apex.service.method=http
+
+# the local cloned repository set this to
+verticle.apex.instrumentation.config.path=&lt;APEX&gt;/repo/
+verticle.apex.instrumentation.remoterepository.uri=https://github.com/verticle-io/apex-instrumentation-repo.git
+verticle.apex.instrumentation.remoterepository.username=user
+verticle.apex.instrumentation.remoterepository.password=pass
+
+# if set to true the local repository will be cloned again on next startup
+verticle.apex.instrumentation.remoterepository.update=true</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="configure-instrumentation">3.3. Configure Instrumentation</h3>
+<div class="paragraph">
+<p>Now the tricky part. Which code of the target system do you want to instrument?</p>
+</div>
+<div class="paragraph">
+<p>Check your &lt;FORKED_REPO&gt; to get an idea on how to attach. Check out the minimal project at <code>&lt;APEX_HOME&gt;/apex-instrumentation-repo/minimal</code>.</p>
+</div>
+<div class="paragraph">
+<p>Open the the <code>minimal.json</code> and adjust</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>the target class:
+<mark>TODO</mark></p>
+</li>
+<li>
+<p>the signature classes:
+<mark>TODO</mark></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If the targeting is done right your target application will print out <code>Foo? Bar!</code> when the target is executed.</p>
+</div>
+<div class="paragraph">
+<p>Lets give our installation a spin.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="run">3.4. Run</h3>
+<div class="paragraph">
+<div class="title">Step 1:</div>
+<p>Start the APEX Service template:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$&gt; cd &lt;APEX_HOME&gt;/apex-service-template
+$&gt; ./mvnw spring-boot:run</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<div class="title">Step 2:</div>
+<p>Start your target application</p>
+</div>
+<div class="paragraph">
+<p>Well, you know best how this works. The logfile should print some APEX related stuff, e.g. configuration bootstrapping:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">***********************************************************************
+***                     APEX COLLECTOR Configuration                ***
+***********************************************************************</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>and you shoud see something like</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">&lt;apex&gt; trying to weave ...
+&lt;apex&gt; weaving method ...
+&lt;apex&gt; successfully weaved method ...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And finally our beloved</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">Foo? Bar!</code></pre>
+</div>
+</div>
 </div>
 </div>
 </div>
