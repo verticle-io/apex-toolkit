@@ -764,8 +764,33 @@ h1, h2, h3, h4, h5 {
     margin-bottom:40px;
     min-width: 500px;
     background: #fff;
-    -webkit-box-shadow: 0px 0px 20px rgba(0,0,0,0.75);
-    -moz-box-shadow: 0px 0px 20px rgba(0,0,0,0.75);
+    -webkit-box-shadow: 0px 0px 200px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 200px rgba(0,0,0,0.75);
     /*-webkit-transition:all 0.5s; */
     overflow: hidden;
+}
+
+.gitrepopanelheaderframe{
+  margin-top: 10px;
+  color: #51a9a9;
+  background-color: #014949;
+  border-color: #51a9a9;
+  -webkit-box-shadow: 0px 0px 200px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 200px 0px rgba(0,0,0,0.75);
+
+}
+
+.gitrepopanelheader {
+    color: #51a9a9;
+    background-color: #013939;
+    border-color: #51a9a9;
+}
+
+.gitrepopanel {
+    //  background-color: #013939;
+
+}
+.gitrepopanel > ul{
+      list-style-type: none;
+
 }
