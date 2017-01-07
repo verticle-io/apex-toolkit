@@ -14,20 +14,8 @@ Create a directory to for the setup. We will call it `<APEX_HOME>` further on.
 ==== Retrieve artifacts and configurations
 
 .Step 1:
-Clone and compile latest release of the collector
+Retrieve the latest binary release of the collector at https://github.com/verticle-io/apex-toolkit/releases/ and place it to APEX_HOME
 
-[source, bash]
-----
-$> cd <APEX_HOME>
-$> git clone https://github.com/verticle-io/apex-toolkit.git
-$> cd apex-toolkit
-# use the gradle wrapper to compile
-$> ./gradlew shadowJar
-# This will create a fatjar of the collector.
-
-# Now create a copy of the collector configuration file:
-$> cp apexAgentConfig.properties <APEX_HOME>/myApexAgentConfig.properties
-----
 
 .Step 2:
 Fork and clone the instrumentation repository on GitHub.
@@ -56,9 +44,7 @@ Your `<APEX_HOME>` directory now should look like this:
 
 [source, bash]
 -----
-apex-toolkit
-    /build/libs/apex-collector-<version>.jar
-    / ...
+apexAgent-<version>.jar
 
 apex-instrumentation-repo
     /tomcat/v8/io.verticle.apex.instrumentation.tomcat8/meta.json
@@ -79,7 +65,7 @@ Now you are done with the preparations. Lets install and configure APEX to your 
 Head over to your target application and add the following params to your JVM:
 [source, bash]
 -----
--javaagent:/<APEX_HOME>/apex-toolkit/apexAgent/build/libs/apexAgent-0.5-all.jar=/<APEX_HOME>/myApexAgentConfig.properties
+-javaagent:/<APEX_HOME>/apexAgent-0.5-all.jar=/<APEX_HOME>/myApexAgentConfig.properties
 -----
 
 Now your application will load the APEX Collector Agent. Lets configure it's behaviour fist.
@@ -87,7 +73,7 @@ Now your application will load the APEX Collector Agent. Lets configure it's beh
 
 ==== Configure the Collector
 
-Open the `<APEX_HOME>/myApexAgentConfig.properties` in an editor and adjust the settings.
+Create a configuration file called `<APEX_HOME>/myApexAgentConfig.properties` in an editor and adjust the settings.
 
 [source, bash]
 -----
