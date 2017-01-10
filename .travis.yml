@@ -1,0 +1,11 @@
+language:  java
+sudo: required
+
+before_script:
+  - chmod +x gradlew
+
+script:
+  - ./gradlew -b apexAgent/build.gradle install
+
+jdk:
+  - oraclejdk8
