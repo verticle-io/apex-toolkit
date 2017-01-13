@@ -58,6 +58,8 @@ Handlers are part of the SDK and intended to be expanded/extended by the user co
 
 Currently we have a very small set of handlers available that serve different purposes.
 
+NOTE: Since release 0.7 handlers can be extended via the SDK. See chapter <<sdk-extend,Extending APEX>>.
+
 .Measuring Performance
 The `BasicPerformanceHandler` will  measure a method body execution timing. We use dropwizard metrics to store and aggregate timers and histograms. See http://metrics.dropwizard.io/ for more details.
 

@@ -1,6 +1,4 @@
 = APEX Docs
-Author: Jens Saade <jens@verticle.io>
-v1.0, 2016-09
 :toc:
 :page-layout: docs
 :page-permalink: /docs/
@@ -14,9 +12,15 @@ v1.0, 2016-09
 :toc-position: left
 
 
+Author: Jens Saade <jens@verticle.io>
+v0.7, 2017-01
+
+
 include::docs/introduction.adoc[]
 
 include::docs/quickstart.adoc[]
+
+include::docs/sdk.adoc[]
 
 //include::docs/howtos.adoc[]
 //include::docs/reference.adoc[]
