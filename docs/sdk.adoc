@@ -1,0 +1,81 @@
+[[sdk-extend]]
+== Extending the APEX Collector Agent
+*@since 0.7*
+
+With release 0.7 the SDK and the API of the apexAgent collector have been open sourced.
+It is still in a very early phase and subject to change.
+
+The SDK allows you to write your own Handlers to be processed by the Collector.
+You can create your own extension and deploy it as an additional agent.
+
+=== Setting up a new Extension Project
+
+Clone and open the example project provided with the https://github.com/verticle-io/apex-toolkit/tree/master/apexAgent-ext[SDK].
+
+This project skeleton comes with a gradle based build and a
+https://github.com/verticle-io/apex-toolkit/blob/master/apexAgent-ext/src/main/java/io/verticle/oss/apex/agent/ext/bootstrap/MyHandler.java[sample]
+ handler class to extend:
+
+[source, java]
+-----
+public class MyHandler implements Handler {
+
+    static final Logger logger = LoggerFactory.getLogger(MyHandler.class);
+
+    /**
+     * The handle method will be called after and before when your handler matches
+     * a classmethod for execution.
+     * It will supply a context object that includes e.g. the current instance
+     */
+    public void handle(AdvisorContext advisorContext) {
+      logger.info("MyHandler handle() called");
+    }
+
+    /**
+     * Same as above but only executed at the start of the matching classmethod
+     */
+    public void handleBefore(AdvisorContext advisorContext) {
+      logger.info("MyHandler handleBefore() called");
+    }
+
+    /**
+     * Same as above but only executed at the end of the matching classmethod
+     */
+    public void handleAfter(AdvisorContext advisorContext) {
+      logger.info("MyHandler handleAfter() called");
+    }
+
+    /**
+     * You can configure options for your handler, they will be injected here as a Map
+     */
+    public void setOptions(Map<HandlerOption, Object> map) {
+
+    }
+}
+-----
+
+The _AdvisorContext_ provides accessors to the current instance and enables your handler to
+
+* get the method signature's arguments and types,
+* get the return value and its types of the method
+* and get the instantiated class.
+
+Check out the basic handler implementations to get an idea:
+https://github.com/verticle-io/apex-toolkit/tree/master/apexAgent-sdk/src/main/java/io/verticle/oss/apex/agent/sdk/handler
+
+WARNING: Since there are no limitations in what your handlers can do you should test it thoroughly before applying it to a critical system!
+
+
+=== Deploying your Extension
+Create the apexAgent-ext.jar jar with _shadowJar_ task:
+[source, bash]
+-----
+./gradlew shadowJar
+-----
+and  copy the apexAgent-ext.jar to the machine and place it along the apexAgent-all.jar
+
+Change the JVM cmd and place an additional javaagent directive *before* the apexAgent-all jar:
+[source, bash]
+-----
+-javaagent=<PATHTO>/apexAgent-ext.jar -javaagent=<PATHTO>/apexAgent-all.jar=<PATHTO>/apexAgent.properties
+-----
