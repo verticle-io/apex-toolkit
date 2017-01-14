@@ -3,17 +3,33 @@ layout: default
 title: apex data extraction toolkit
 ---
 
+<br>
+<div>
+
+		{% for post in site.posts limit:3 %}
+	    <span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{site.baseurl}}{{post.url}}" title="{{ post.title }}">{{ post.title }}</a>
+			<br>
+	  {% endfor %}
+
+
+
+</div>
+
 <div class="teaser">
 
-	<br><br><br>
-	<p>APEX helps getting better visibility and understanding of what is happening in the software products' application layer during runtime.
-  </p>
-	<p>Designed to accelerate application analytics, debugging and monitoring.
-	</p>
+
+
+
+
+
 	<br>
 		<div class="techimage">
 				<img src="{{site.baseurl}}/images/apexsimple.jpg" class="img-responsive" alt="Responsive image">
 		</div>
+
+		<h2>APEX helps getting better visibility and understanding of what is happening in the software products' application layer during runtime.
+		</h2><h2>Designed to accelerate application analytics, debugging and monitoring.</h2>
+<br><br>
 
 	<div class="row">
 		<div class="col-md-4">
