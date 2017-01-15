@@ -20,14 +20,14 @@
     <!-- Begin Jekyll SEO tag v2.1.0 -->
 <title>APEX Docs - Jens Saade, verticle.io</title>
 <meta property="og:title" content="APEX Docs" />
-<link rel="canonical" href="/docs/" />
-<meta property="og:url" content="/docs/" />
+<link rel="canonical" href="http://localhost:4000/docs/" />
+<meta property="og:url" content="http://localhost:4000/docs/" />
 <meta property="og:site_name" content="Jens Saade, verticle.io" />
 <script type="application/ld+json">
 {"@context": "http://schema.org",
 "@type": "WebPage",
 "headline": "APEX Docs",
-"url": "/docs/"}</script>
+"url": "http://localhost:4000/docs/"}</script>
 <!-- End Jekyll SEO tag -->
 
   </head>
@@ -84,9 +84,37 @@
 <li><a href="#run">3.4. Run</a></li>
 </ul>
 </li>
-<li><a href="#howtos">4. HOWTOs</a></li>
-<li><a href="#reference">5. Reference</a></li>
+<li><a href="#sdk-extend">4. Extending the APEX Collector Agent</a>
+<ul class="sectlevel2">
+<li><a href="#setting-up-a-new-extension-project">4.1. Setting up a new Extension Project</a></li>
+<li><a href="#compiling-and-deploying-your-extension">4.2. Compiling and Deploying your Extension</a></li>
 </ul>
+</li>
+<li><a href="#howtos">5. HOWTOs</a></li>
+<li><a href="#reference">6. Reference</a></li>
+</ul>
+</div>
+<div id="preamble">
+<div class="sectionbody">
+<hr>
+<div class="paragraph">
+<p>Author: Jens Saade &lt;<a href="mailto:jens@verticle.io">jens@verticle.io</a>&gt;
+v0.7, 2017-01</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+The docs are work in progress. Please help us making them better by sending a PR on github.
+</td>
+</tr>
+</table>
+</div>
+<hr>
+</div>
 </div>
 <div class="sect1">
 <h2 id="apex-in-a-nutshell">1. APEX in a Nutshell</h2>
@@ -108,6 +136,9 @@ Reading the logs was not sufficient because the information we looked for was li
 <p>As a result our most important KPI - Mean Time to Resolution (MTTR) - was simply too high because of low visibility caused by ineffective tooling.</p>
 </div>
 <div class="paragraph">
+<p> <br></p>
+</div>
+<div class="paragraph">
 <p>Our finding was:</p>
 </div>
 <div class="olist arabic">
@@ -122,6 +153,9 @@ Reading the logs was not sufficient because the information we looked for was li
 <p>Without the ability to act you make your customers ring the bell first.</p>
 </li>
 </ol>
+</div>
+<div class="paragraph">
+<p> <br></p>
 </div>
 <div class="paragraph">
 <p>Of course you can add debug and logging code, use JMX, btrace and other tools.
@@ -171,6 +205,18 @@ Handlers are part of the SDK and intended to be expanded/extended by the user co
 </div>
 <div class="paragraph">
 <p>Currently we have a very small set of handlers available that serve different purposes.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+Since release 0.7 handlers can be extended via the SDK. See chapter <a href="#sdk-extend">Extending APEX</a>.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <div class="title">Measuring Performance</div>
@@ -224,7 +270,7 @@ def execute(){
 <h5 id="messaging">1.3.1.2. Messaging</h5>
 <div class="paragraph">
 <p>Gathered data has to be forwarded to the service to make use of it.
-Currently, two methods are available: AMQP based messaging (e.g. using rabbitMQ) and REST based webservices.</p>
+Currently, three methods are available: AMQP based messaging (e.g. using rabbitMQ), REST based webservices and ELK beats.</p>
 </div>
 </div>
 </div>
@@ -283,6 +329,11 @@ or
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<p> <br>
+ <br></p>
+</div>
+<hr>
 </div>
 </div>
 </div>
@@ -329,6 +380,11 @@ The code is currently developed for Java 8. We will backport parts of it to make
 <div class="title">MVN</div>
 <p>The build is based on maven. Either install the lastest version or use the wrapper mvnw.</p>
 </div>
+<div class="paragraph">
+<p> <br>
+ <br></p>
+</div>
+<hr>
 </div>
 </div>
 </div>
@@ -433,23 +489,31 @@ apex-service-template
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash"># AMQP Settings, not relevant for this setup, we will connect via REST
+<pre class="highlight"><code class="language-bash" data-lang="bash"># Transport settings. APEX can report via AMQP, REST and ELK-Beat
+# [amqp,http,beat]
+verticle.apex.service.method=http
+
+# http and beat
+verticle.apex.service.method.http.debug=false
+verticle.apex.service.uri=http://127.0.0.1:9005
+
+# http only
+verticle.apex.service.username=user
+verticle.apex.service.password=password
+
+# amqp only
 verticle.apex.mq.server=127.0.0.1
 verticle.apex.mq.server.port=5672
 
-# your APEX service url
-verticle.apex.service.http.url=http://127.0.0.1:9005
+# Repository Settings. APEX will be instrumented from the configuration within this repository.
 
-# the messaging method, leave it to http
-verticle.apex.service.method=http
+# the local repo path (where to clone to)
+verticle.apex.instrumentation.config.path=/var/opt/apex/repo/
 
-# the local cloned repository set this to
-verticle.apex.instrumentation.config.path=&lt;APEX&gt;/repo/
+# the external git repository (can be anywhere)
 verticle.apex.instrumentation.remoterepository.uri=https://github.com/verticle-io/apex-instrumentation-repo.git
 verticle.apex.instrumentation.remoterepository.username=user
 verticle.apex.instrumentation.remoterepository.password=pass
-
-# if set to true the local repository will be cloned again on next startup
 verticle.apex.instrumentation.remoterepository.update=true</code></pre>
 </div>
 </div>
@@ -529,11 +593,187 @@ $&gt; ./mvnw spring-boot:run</code></pre>
 <pre class="highlight"><code class="language-bash" data-lang="bash">Foo? Bar!</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p> <br>
+ <br></p>
+</div>
+<hr>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="howtos">4. HOWTOs</h2>
+<h2 id="sdk-extend">4. Extending the APEX Collector Agent</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>@since 0.7</strong></p>
+</div>
+<div class="paragraph">
+<p>With release 0.7 the SDK and the API of the apexAgent collector have been open sourced.
+It is still in a very early phase and subject to change.</p>
+</div>
+<div class="paragraph">
+<p>The SDK allows you to write your own Handlers to be processed by the Collector.
+You can create your own extension and deploy it as an additional agent.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Warning</div>
+</td>
+<td class="content">
+Since there are no limitations in what your handlers can do you should test them thoroughly before applying it to a critical system!
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="setting-up-a-new-extension-project">4.1. Setting up a new Extension Project</h3>
+<div class="paragraph">
+<p>Clone and open the example project provided with the <a href="https://github.com/verticle-io/apex-toolkit/tree/master/apexAgent-ext">SDK</a>.
+Now either use and change the apexAgent-ext submodule to your needs or copy the structure to a new project (for this guide we assume that you change it).</p>
+</div>
+<div class="sect3">
+<h4 id="implement-a-custom-handler">4.1.1. Implement a custom Handler</h4>
+<div class="paragraph">
+<p>This project skeleton comes with a gradle based build and a
+<a href="https://github.com/verticle-io/apex-toolkit/blob/master/apexAgent-ext/src/main/java/io/verticle/oss/apex/agent/ext/bootstrap/MyHandler.java">sample</a>
+ handler class to extend.</p>
+</div>
+<div class="paragraph">
+<p>All handler methods will be called when your target configuration (class methods and constructors) matches.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>handle()</code> will be called at start and end of the method</p>
+</li>
+<li>
+<p><code>handleBefore()</code> at the start only</p>
+</li>
+<li>
+<p><code>handleAfter()</code> at the end only</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public class MyHandler implements Handler {
+
+    static final Logger logger = LoggerFactory.getLogger(MyHandler.class);
+
+    /**
+     * The handle method will be called after and before when your handler matches
+     * a classmethod for execution.
+     * It will supply a context object that includes e.g. the current instance
+     */
+    public void handle(AdvisorContext advisorContext) {
+      logger.info("MyHandler handle() called");
+    }
+
+    /**
+     * Same as above but only executed at the start of the matching classmethod
+     */
+    public void handleBefore(AdvisorContext advisorContext) {
+      logger.info("MyHandler handleBefore() called");
+    }
+
+    /**
+     * Same as above but only executed at the end of the matching classmethod
+     */
+    public void handleAfter(AdvisorContext advisorContext) {
+      logger.info("MyHandler handleAfter() called");
+    }
+
+    /**
+     * You can configure options for your handler, they will be injected here as a Map
+     */
+    public void setOptions(Map&lt;HandlerOption, Object&gt; map) {
+
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><br>
+The <em>AdvisorContext</em> provides accessors to the current instance and enables your handler to</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>get the method signature&#8217;s arguments and types,</p>
+</li>
+<li>
+<p>get the return value and its types of the method</p>
+</li>
+<li>
+<p>and get the instantiated class.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sending-messages">4.1.2. Sending Messages</h4>
+<div class="paragraph">
+<p>Sending messages can be done by creating a Message object</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public void handleAfter(AdvisorContext advisorContext) {
+      logger.info("MyHandler handleAfter() called");
+
+      // use the NamingStrategy to create proper metric qualifiers
+      // the domain is related to the area where the metric originates
+      String name = DefaultNamingStrategy.getInstrumentedAdviceName(advisorContext);
+      MetricMessage message = new MetricMessage(Domain.application, name, new Date());
+
+      // you can add any amount of field to the message.
+      message.addField("correlationId", advisorContext.getCorrelationId());
+      message.addField("trigger", trigger);
+      message.addField("args", args);
+
+      try {
+          // always access via the CollectorFactory
+          ApexCollectorFactory.get().reportDirect(this.getClass(), message);
+      } catch (Exception e) {
+          logger.error("Could not send message", e);
+      }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Check out the basic SDK handler implementations to get more ideas. You can also use them as a base implementation and extend them:
+<a href="https://github.com/verticle-io/apex-toolkit/tree/master/apexAgent-sdk/src/main/java/io/verticle/oss/apex/agent/sdk/handler" class="bare">https://github.com/verticle-io/apex-toolkit/tree/master/apexAgent-sdk/src/main/java/io/verticle/oss/apex/agent/sdk/handler</a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="compiling-and-deploying-your-extension">4.2. Compiling and Deploying your Extension</h3>
+<div class="paragraph">
+<p>Create your apexAgent-ext.jar with <code>shadowJar</code> task:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">cd to apex-toolkit directory
+./gradlew -b apexAgent-ext/build.gradle shadowJar</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>and  copy the apexAgent-ext.jar to the machine and place it along the apexAgent-all.jar</p>
+</div>
+<div class="paragraph">
+<p>Change the JVM cmd and place an additional javaagent directive <strong>before</strong> the apexAgent-all jar:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">-javaagent=&lt;PATHTO&gt;/apexAgent-ext.jar -javaagent=&lt;PATHTO&gt;/apexAgent-all.jar=&lt;PATHTO&gt;/apexAgent.properties</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="howtos">5. HOWTOs</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p><mark>WORK_IN_PROGRESS</mark></p>
@@ -541,7 +781,7 @@ $&gt; ./mvnw spring-boot:run</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="reference">5. Reference</h2>
+<h2 id="reference">6. Reference</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p><mark>WORK_IN_PROGRESS</mark></p>
