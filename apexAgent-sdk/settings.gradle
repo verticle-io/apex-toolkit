@@ -1,0 +1,3 @@
+includeFlat 'apexAgent-api'
+findProject(':apexAgent-api')?.name = 'apexAgent-api'
+

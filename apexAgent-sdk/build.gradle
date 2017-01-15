@@ -1,0 +1,42 @@
+group 'io.verticle.apex'
+version 'v0.7'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    maven {
+        url System.getProperty("user.home") + "/apex-repo"
+
+    }
+    maven { url "https://jitpack.io" }
+}
+
+uploadArchives {
+    repositories {
+        maven {
+            url System.getProperty("user.home") + "/apex-repo"
+        }
+    }
+}
+
+dependencies {
+
+    compile project(':apexAgent-api')
+
+    compile('com.fasterxml.jackson.core:jackson-core:2.7.1')
+    compile('com.fasterxml.jackson.core:jackson-databind:2.7.1-1')
+    compile('com.fasterxml.jackson.core:jackson-annotations:2.7.1')
+    compile('ch.qos.logback:logback-classic:1.1.3')
+    compile('org.apache.commons:commons-lang3:3.4')
+
+    // needed for the BasicScriptedHandler
+    compile('org.codehaus.groovy:groovy-all:2.4.6')
+
+    compile('com.github.verticle-io:apex-commons-oss:v0.7')
+
+    testCompile('junit:junit:4.11')
+
+}
