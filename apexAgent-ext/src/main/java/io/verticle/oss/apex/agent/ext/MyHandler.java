@@ -1,4 +1,4 @@
-package io.verticle.oss.apex.agent.ext.bootstrap;
+package io.verticle.oss.apex.agent.ext;
 
 import io.verticle.apex.commons.oss.api.instrumentation.AdvisorContext;
 import io.verticle.apex.commons.oss.api.instrumentation.Handler;
