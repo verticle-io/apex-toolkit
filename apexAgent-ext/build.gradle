@@ -1,4 +1,4 @@
-version 'unspecified'
+version '0.7'
 
 buildscript {
     repositories {
@@ -9,7 +9,7 @@ buildscript {
 
     }
     dependencies {
-        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.4'
     }
 }
 
@@ -24,17 +24,32 @@ repositories {
 }
 
 dependencies {
-    compile group: "com.github.verticle-io", name: "apex-commons-oss", version: "develop-SNAPSHOT", changing: true
     compile ('com.github.verticle-io.apex-toolkit:apexAgent-api:develop-SNAPSHOT')
     compile ('com.github.verticle-io.apex-toolkit:apexAgent-sdk:develop-SNAPSHOT')
 }
 
 shadowJar {
+
+    configurations = [project.configurations.compile]
+    classifier = null
+
     manifest {
         attributes 'Premain-Class': 'io.verticle.oss.apex.agent.ext.bootstrap.BootstrapExtension'
     }
 
-    exclude '*.html'
+    // only include necessary deps
+    dependencies {
+        include dependency('org.slf4j:slf4j-api')
+        include dependency('ch.qos.logback:logback-classic:')
+        include dependency('ch.qos.logback:logback-core:')
+    }
+
+    // and relocate their packages
+    relocate ('org.slf4j','apex.deps.ext.org.slf4j')
+    relocate ('ch.qos', 'apex.deps.ext.ch.qos')
+
     exclude '*.properties'
+
+
 
 }
