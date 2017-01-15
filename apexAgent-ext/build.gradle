@@ -24,8 +24,8 @@ repositories {
 }
 
 dependencies {
-    compile ('com.github.verticle-io.apex-toolkit:apexAgent-api:develop-SNAPSHOT')
-    compile ('com.github.verticle-io.apex-toolkit:apexAgent-sdk:develop-SNAPSHOT')
+    compile ('com.github.verticle-io.apex-toolkit:apexAgent-api:v0.7')
+    compile ('com.github.verticle-io.apex-toolkit:apexAgent-sdk:v0.7')
 }
 
 shadowJar {
