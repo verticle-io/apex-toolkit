@@ -1,3 +1,8 @@
+{sp} +
+{sp} +
+
+***
+
 [[sdk-extend]]
 == Extending the APEX Collector Agent
 *@since 0.7*
@@ -8,13 +13,24 @@ It is still in a very early phase and subject to change.
 The SDK allows you to write your own Handlers to be processed by the Collector.
 You can create your own extension and deploy it as an additional agent.
 
+WARNING: Since there are no limitations in what your handlers can do you should test them thoroughly before applying it to a critical system!
+
 === Setting up a new Extension Project
 
 Clone and open the example project provided with the https://github.com/verticle-io/apex-toolkit/tree/master/apexAgent-ext[SDK].
+Now either use and change the apexAgent-ext submodule to your needs or copy the structure to a new project (for this guide we assume that you change it).
+
+==== Implement a custom Handler
 
 This project skeleton comes with a gradle based build and a
 https://github.com/verticle-io/apex-toolkit/blob/master/apexAgent-ext/src/main/java/io/verticle/oss/apex/agent/ext/bootstrap/MyHandler.java[sample]
- handler class to extend:
+ handler class to extend.
+
+All handler methods will be called when your target configuration (class methods and constructors) matches.
+
+* `handle()` will be called at start and end of the method
+* `handleBefore()` at the start only
+* `handleAfter()` at the end only
 
 [source, java]
 -----
@@ -53,24 +69,51 @@ public class MyHandler implements Handler {
     }
 }
 -----
-
+{sp}+
 The _AdvisorContext_ provides accessors to the current instance and enables your handler to
 
 * get the method signature's arguments and types,
 * get the return value and its types of the method
 * and get the instantiated class.
 
-Check out the basic handler implementations to get an idea:
+==== Sending Messages
+
+Sending messages can be done by creating a Message object
+
+[source, java]
+-----
+public void handleAfter(AdvisorContext advisorContext) {
+      logger.info("MyHandler handleAfter() called");
+
+      // use the NamingStrategy to create proper metric qualifiers
+      // the domain is related to the area where the metric originates
+      String name = DefaultNamingStrategy.getInstrumentedAdviceName(advisorContext);
+      MetricMessage message = new MetricMessage(Domain.application, name, new Date());
+
+      // you can add any amount of field to the message.
+      message.addField("correlationId", advisorContext.getCorrelationId());
+      message.addField("trigger", trigger);
+      message.addField("args", args);
+
+      try {
+          // always access via the CollectorFactory
+          ApexCollectorFactory.get().reportDirect(this.getClass(), message);
+      } catch (Exception e) {
+          logger.error("Could not send message", e);
+      }
+}
+-----
+
+Check out the basic SDK handler implementations to get more ideas. You can also use them as a base implementation and extend them:
 https://github.com/verticle-io/apex-toolkit/tree/master/apexAgent-sdk/src/main/java/io/verticle/oss/apex/agent/sdk/handler
 
-WARNING: Since there are no limitations in what your handlers can do you should test it thoroughly before applying it to a critical system!
 
-
-=== Deploying your Extension
-Create the apexAgent-ext.jar jar with _shadowJar_ task:
+=== Compiling and Deploying your Extension
+Create your apexAgent-ext.jar with `shadowJar` task:
 [source, bash]
 -----
-./gradlew shadowJar
+cd to apex-toolkit directory
+./gradlew -b apexAgent-ext/build.gradle shadowJar
 -----
 and  copy the apexAgent-ext.jar to the machine and place it along the apexAgent-all.jar
 

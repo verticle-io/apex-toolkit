@@ -1,3 +1,4 @@
+
 == {prodname} in a Nutshell
 
 {prodname} was written to help getting better visibility and understanding of what is happening in the software products' application layer during runtime.
@@ -12,11 +13,16 @@ Reading the logs was not sufficient because the information we looked for was li
 
 As a result our most important KPI - Mean Time to Resolution (MTTR) - was simply too high because of low visibility caused by ineffective tooling.
 
+{sp} +
+
 Our finding was:
 
 . You cannot get aware of a problem if it is not visible.
 . Without awareness you have no chance to react proactively.
 . Without the ability to act you make your customers ring the bell first.
+
+{sp} +
+
 
 Of course you can add debug and logging code, use JMX, btrace and other tools.
 And there are quite obvious methods like remote debugging the JVM - surely a good choice but not applicable everywhere.
@@ -108,7 +114,7 @@ def execute(){
 ===== Messaging
 
 Gathered data has to be forwarded to the service to make use of it.
-Currently, two methods are available: AMQP based messaging (e.g. using rabbitMQ) and REST based webservices.
+Currently, three methods are available: AMQP based messaging (e.g. using rabbitMQ), REST based webservices and ELK beats.
 
 ==== Instrumentation Configuration
 
@@ -143,6 +149,11 @@ This is the data sink where collectors send their gathered data to. We are provi
 
 * Roll your own by cloning our Spring Boot template project on Github (https://github.com/verticle-io/apex-service-template). Messaging is already in and you can extend it to your needs.
 * Use our upcoming cloud service offering which is currently prepared for beta.
+
+{sp} +
+{sp} +
+
+***
 
 == System requirements
 

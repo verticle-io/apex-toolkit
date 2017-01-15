@@ -1,4 +1,7 @@
+{sp} +
+{sp} +
 
+***
 == Quickstart
 
 This guide will take approx. 15 minutes to walk though.
@@ -77,24 +80,34 @@ Create a configuration file called `<APEX_HOME>/myApexAgentConfig.properties` in
 
 [source, bash]
 -----
-# AMQP Settings, not relevant for this setup, we will connect via REST
+# Transport settings. APEX can report via AMQP, REST and ELK-Beat
+# [amqp,http,beat]
+verticle.apex.service.method=http
+
+# http and beat
+verticle.apex.service.method.http.debug=false
+verticle.apex.service.uri=http://127.0.0.1:9005
+
+# http only
+verticle.apex.service.username=user
+verticle.apex.service.password=password
+
+# amqp only
 verticle.apex.mq.server=127.0.0.1
 verticle.apex.mq.server.port=5672
 
-# your APEX service url
-verticle.apex.service.http.url=http://127.0.0.1:9005
+# Repository Settings. APEX will be instrumented from the configuration within this repository.
 
-# the messaging method, leave it to http
-verticle.apex.service.method=http
+# the local repo path (where to clone to)
+verticle.apex.instrumentation.config.path=/var/opt/apex/repo/
 
-# the local cloned repository set this to
-verticle.apex.instrumentation.config.path=<APEX>/repo/
+# the external git repository (can be anywhere)
 verticle.apex.instrumentation.remoterepository.uri=https://github.com/verticle-io/apex-instrumentation-repo.git
 verticle.apex.instrumentation.remoterepository.username=user
 verticle.apex.instrumentation.remoterepository.password=pass
-
-# if set to true the local repository will be cloned again on next startup
 verticle.apex.instrumentation.remoterepository.update=true
+
+
 -----
 
 === Configure Instrumentation
