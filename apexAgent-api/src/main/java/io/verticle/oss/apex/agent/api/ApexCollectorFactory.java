@@ -37,7 +37,7 @@ public final class ApexCollectorFactory {
         if (collectorInstance != null)
             return collectorInstance;
 
-        Reflections reflections = new Reflections("io.verticle.oss.apex");
+        Reflections reflections = new Reflections("io.verticle.apex");
         Set<Class<? extends ApexCollector>>  collectors = reflections.getSubTypesOf(ApexCollector.class);
 
         if (collectors.size() > 0){
