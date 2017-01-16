@@ -25,13 +25,7 @@ include::docs/quickstart.adoc[]
 
 include::docs/sdk.adoc[]
 
-//include::docs/howtos.adoc[]
-//include::docs/reference.adoc[]
+include::docs/integrations.adoc[]
 
-== HOWTOs
-
-#WORK_IN_PROGRESS#
-
-== Reference
-
-#WORK_IN_PROGRESS#
+{sp}+
+{sp}+

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>APEX Docs</title>
+    <title>apex data extraction toolkit</title>
 
     <link href="/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -10,24 +10,24 @@
     <link href='https://fonts.googleapis.com/css?family=Roboto+Condensed:400,300,700&subset=latin,greek' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,700&subset=latin,greek' rel='stylesheet' type='text/css'>
     <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,300" rel="stylesheet">
-    <link rel="stylesheet" href="/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/font-awesome.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/ir_black.min.css">
 
     <!-- Custom styles for this template -->
-    <link href="/css/apexdocs.css" rel="stylesheet">
-
-    <!-- Begin Jekyll SEO tag v2.1.0 -->
-<title>APEX Docs - Jens Saade, verticle.io</title>
-<meta property="og:title" content="APEX Docs" />
-<link rel="canonical" href="http://localhost:4000/docs/" />
-<meta property="og:url" content="http://localhost:4000/docs/" />
+      <link href="/css/apex.css" rel="stylesheet">
+      <!-- Begin Jekyll SEO tag v2.1.0 -->
+<title>apex data extraction toolkit - Jens Saade, verticle.io</title>
+<meta property="og:title" content="apex data extraction toolkit" />
+<link rel="canonical" href="http://localhost:4000/" />
+<meta property="og:url" content="http://localhost:4000/" />
 <meta property="og:site_name" content="Jens Saade, verticle.io" />
 <script type="application/ld+json">
 {"@context": "http://schema.org",
-"@type": "WebPage",
-"headline": "APEX Docs",
-"url": "http://localhost:4000/docs/"}</script>
+"@type": "WebSite",
+"name": "Jens Saade, verticle.io",
+"headline": "apex data extraction toolkit",
+"url": "http://localhost:4000/"}</script>
 <!-- End Jekyll SEO tag -->
 
   </head>
@@ -43,11 +43,10 @@
 
           <div class="masthead clearfix">
             <div class="">
-              <h3 class="masthead-brand apex_title">apex toolkit<span class="apex_title_white"> : docs</span></h3>
               <nav>
                 <ul class="nav masthead-nav">
-                  <li><a href="/">About</a></li>
-                  <li><a class="active" href="/docs">Docs</a></li>
+                  <li><a  class="active" href="/">About</a></li>
+                  <li><a href="/docs/index.html">Docs</a></li>
                   <li><a href="/blog">Blog</a></li>
                   <li><a href="https://gitter.im/verticle-io/apex">Gitter</a></li>
                 </ul>
@@ -55,745 +54,418 @@
               </nav>
             </div>
           </div><!-- header -->
-          <br><br><br>
+
+          <div class="row">
+            <div class="col-md-6">
+              <span class="masthead-brand apex_title">apex toolkit</span>
+              <br><h1>apex extracts contextual data and metrics directly from your Java application </h1>
+
+            </div>
+            <div class="col-md-6">
+
+
+                    <div class="row">
+                      <div class="text-right  pull-right">
+                        <div class="panel gitrepopanelheaderframe">
+                          <div class="panel-heading gitrepopanelheader"><i class="fa fa-github" aria-hidden="true"></i> GitHub Repositories</div>
+                          <div class="panel-body gitrepopanel">
+                            <ul>
+                              <li><a href="https://github.com/verticle-io/apex-toolkit">Collector Agent</a></li>
+                              <li><a href="https://github.com/verticle-io/apex-service-template">Service Template</a></li>
+                              <li><a href="https://github.com/verticle-io/apex-instrumentation-repo">Instrumentation Repository</a></li>
+                            </ul>
+                            <div class="row">
+                              <div class="col-md-12 text-right">
+                                  <a class="github-button" href="https://github.com/verticle-io/apex-toolkit" data-icon="octicon-star" data-style="mega" data-count-href="/verticle-io/apex-toolkit/stargazers" data-count-api="/repos/verticle-io/apex-toolkit#stargazers_count" data-count-aria-label="# stargazers on GitHub" aria-label="Star verticle-io/apex-toolkit on GitHub">Star</a>
+                                  <a class="github-button" href="https://github.com/verticle-io/apex-toolkit/fork" data-icon="octicon-repo-forked" data-style="mega" data-count-href="/verticle-io/apex-toolkit/network" data-count-api="/repos/verticle-io/apex-toolkit#forks_count" data-count-aria-label="# forks on GitHub" aria-label="Fork verticle-io/apex-toolkit on GitHub">Fork</a>
+                                  <a class="github-button" href="https://github.com/verticle-io/apex-toolkit/releases/download/v0.7/apexAgent-0.7-all.jar" data-icon="octicon-cloud-download" data-style="mega" aria-label="Download verticle-io/apex-toolkit on GitHub">Download</a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+
+
+            </div>
+          </div>
+
+
+
           <div>
 
-            
+            <br>
+<div>
 
-            <div id="toc" class="toc">
-<div id="toctitle">Table of Contents</div>
-<ul class="sectlevel1">
-<li><a href="#apex-in-a-nutshell">1. APEX in a Nutshell</a>
-<ul class="sectlevel2">
-<li><a href="#foreword-visibility-creates-awareness">1.1. Foreword: Visibility creates Awareness</a></li>
-<li><a href="#technical-approach">1.2. Technical Approach</a></li>
-<li><a href="#component-overview">1.3. Component Overview</a></li>
-</ul>
-</li>
-<li><a href="#system-requirements">2. System requirements</a>
-<ul class="sectlevel2">
-<li><a href="#for-the-target-machine">2.1. for the target machine</a></li>
-<li><a href="#for-the-service-machine">2.2. for the service machine</a></li>
-</ul>
-</li>
-<li><a href="#quickstart">3. Quickstart</a>
-<ul class="sectlevel2">
-<li><a href="#preparations">3.1. Preparations</a></li>
-<li><a href="#installation">3.2. Installation</a></li>
-<li><a href="#configure-instrumentation">3.3. Configure Instrumentation</a></li>
-<li><a href="#run">3.4. Run</a></li>
-</ul>
-</li>
-<li><a href="#sdk-extend">4. Extending the APEX Collector Agent</a>
-<ul class="sectlevel2">
-<li><a href="#setting-up-a-new-extension-project">4.1. Setting up a new Extension Project</a></li>
-<li><a href="#compiling-and-deploying-your-extension">4.2. Compiling and Deploying your Extension</a></li>
-</ul>
-</li>
-<li><a href="#howtos">5. HOWTOs</a></li>
-<li><a href="#reference">6. Reference</a></li>
-</ul>
-</div>
-<div id="preamble">
-<div class="sectionbody">
-<hr>
-<div class="paragraph">
-<p>Author: Jens Saade &lt;<a href="mailto:jens@verticle.io">jens@verticle.io</a>&gt;
-v0.7, 2017-01</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<div class="title">Note</div>
-</td>
-<td class="content">
-The docs are work in progress. Please help us making them better by sending a PR on github.
-</td>
-</tr>
-</table>
-</div>
-<hr>
-</div>
-</div>
-<div class="sect1">
-<h2 id="apex-in-a-nutshell">1. APEX in a Nutshell</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>APEX was written to help getting better visibility and understanding of what is happening in the software products' application layer during runtime.</p>
-</div>
-<div class="paragraph">
-<p>APEX is an abbreviation for <strong>A</strong> ll <strong>P</strong> urpose <strong>Ex</strong> traction Toolkit.</p>
-</div>
-<div class="sect2">
-<h3 id="foreword-visibility-creates-awareness">1.1. Foreword: Visibility creates Awareness</h3>
-<div class="paragraph">
-<p>When first discussing and prototyping APEX we were looking to establish a better monitoring of our Java based applications.
-Too often we have seen software and projects getting out of control because nobody could get a clue what was really going on inside in detail.
-Reading the logs was not sufficient because the information we looked for was like searching the needle in the haystack - or worse - it simply was not put out.</p>
-</div>
-<div class="paragraph">
-<p>As a result our most important KPI - Mean Time to Resolution (MTTR) - was simply too high because of low visibility caused by ineffective tooling.</p>
-</div>
-<div class="paragraph">
-<p> <br></p>
-</div>
-<div class="paragraph">
-<p>Our finding was:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>You cannot get aware of a problem if it is not visible.</p>
-</li>
-<li>
-<p>Without awareness you have no chance to react proactively.</p>
-</li>
-<li>
-<p>Without the ability to act you make your customers ring the bell first.</p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p> <br></p>
-</div>
-<div class="paragraph">
-<p>Of course you can add debug and logging code, use JMX, btrace and other tools.
-And there are quite obvious methods like remote debugging the JVM - surely a good choice but not applicable everywhere.
-But we were searching for a more convenient way.</p>
-</div>
-<div class="paragraph">
-<p>This was our first leap towards APEX - establishing a highly adaptable monitoring tool.
-After lots of talk we discovered that we have had created something more generic than we realized and were touching multiple scenarios of interest: runtime monitoring, debugging, advanced testing and business analysis.</p>
-</div>
-<div class="paragraph">
-<p>We decided to take a step back from our initial intent and refactor and share the APEX framework components on Github so others can benefit.
-In the future we plan to develop services that are based on this framework.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="technical-approach">1.2. Technical Approach</h3>
-<div class="paragraph">
-<p>The basic idea is to hook into an existing code base without cluttering it with log statements or debug code and directly participate on code execution right on the spot. We do this by instrumenting classes when they get loaded in the classloader and installing <em>handler hooks</em> at specific locations with the <em>Javassist</em> framework.</p>
-</div>
-<div class="paragraph">
-<p>The handler hooks can be configured to execute prebuilt and custom handler classes that execute specific tasks.
-For instance you can measure code executions and store the results to a metrics reservoir.
-Or you can inject a generic dumper that spills out the current scope to the log.
-We also provide a handler which can execute arbitrary groovy code.</p>
-</div>
-<div class="paragraph">
-<p>Additionally there is a metric &amp; event messaging component that can be used by the handlers to transport information to a service endpoint.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="component-overview">1.3. Component Overview</h3>
-<div class="paragraph">
-<p>APEX consists of couple of components. Some are mandatory, some are optional. Lets take a look around.</p>
-</div>
-<div class="sect3">
-<h4 id="collector">1.3.1. Collector</h4>
-<div class="paragraph">
-<p>This Java agent is used to connect to the target application and control the instrumentation of the code.
-It is attached to the JVM and will download instrumentation configs from the repository first and then inject the hooks once target classes get loaded by the application.</p>
-</div>
-<div class="sect4">
-<h5 id="handlers">1.3.1.1. Handlers</h5>
-<div class="paragraph">
-<p>Handlers are part of the instrumentation instructions and tell the collector what to do when the application code executes the placed hooks.
-Handlers are part of the SDK and intended to be expanded/extended by the user community.</p>
-</div>
-<div class="paragraph">
-<p>Currently we have a very small set of handlers available that serve different purposes.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<div class="title">Note</div>
-</td>
-<td class="content">
-Since release 0.7 handlers can be extended via the SDK. See chapter <a href="#sdk-extend">Extending APEX</a>.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<div class="title">Measuring Performance</div>
-<p>The <code>BasicPerformanceHandler</code> will  measure a method body execution timing. We use dropwizard metrics to store and aggregate timers and histograms. See <a href="http://metrics.dropwizard.io/" class="bare">http://metrics.dropwizard.io/</a> for more details.</p>
-</div>
-<div class="paragraph">
-<div class="title">Tracking Execution Context</div>
-<p>The <code>BasicContextDumpHandler</code> can be used on methods to dump the current state of all signature variables <em>before</em> and <em>after</em> method body execution.</p>
-</div>
-<div class="paragraph">
-<div class="title">Generic Class Access</div>
-<p>The <code>BasicScriptedHandler</code> is probably the most powerful handler.
-It enables to run groovy scripts using a method callback.
-In that callback you have access to the so called <em>AdvisorContext</em> which includes the current class instance, the method arguments and the <em>service message object</em> to fill with metadata and object maps.</p>
-</div>
-<div class="listingblock">
-<div class="title">An example:</div>
-<div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">// A simple groovy script that gets executed on each instrumented method call
-def execute(){
-    println("method executed")
+		
+	    <span>15 Jan 2017</span> &raquo; <a href="/blog/2017/01/15/toolkit-binary-release-07-with-SDK" title="v0.7 binary released with Collector SDK">v0.7 binary released with Collector SDK</a>
+			<br>
+	  
+	    <span>07 Jan 2017</span> &raquo; <a href="/blog/2017/01/07/toolki-binary-release-0.6" title="APEX toolkit v0.6 binary release">APEX toolkit v0.6 binary release</a>
+			<br>
+	  
+	    <span>31 Oct 2016</span> &raquo; <a href="/blog/2016/10/31/apex-toolkit-site-launched" title="APEX toolkit launched">APEX toolkit launched</a>
+			<br>
+	  
 
-    // we have some implicit objects here like 'context'  AdvisorContext containing e.g
-    // the instrumented instance
-    def instance = context.getInstance()
 
-    // message - our message object for apex
-    message.addField("msg", "Foo? Bar!")
 
-    // you can execute methods ...
-    message.addField("something", instance.sampleField.getSomething());
+</div>
 
-    // ... or fields ...
-    message.addField("somethingElse", instance.somethingElse);
+<div class="teaser">
 
-    // ... and also log to sysout, quick and dirty
-    println("instance:" + context.instance);
 
-    // we could also access the method arguments via 'args' and 'argsCount'
-    // “ the number of arguments in the signature
-    // arg1 ... argN the arguments
-    println("arg 1:" + arg1.toString())
 
-    // the message object will now be sent to the apex service for further processing.
 
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect4">
-<h5 id="messaging">1.3.1.2. Messaging</h5>
-<div class="paragraph">
-<p>Gathered data has to be forwarded to the service to make use of it.
-Currently, three methods are available: AMQP based messaging (e.g. using rabbitMQ), REST based webservices and ELK beats.</p>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="instrumentation-configuration">1.3.2. Instrumentation Configuration</h4>
-<div class="paragraph">
-<p>In order to tell the collector what on how to instrument the target system the agent will connect to a specified git repository and clone the instructions to the local system.</p>
-</div>
-<div class="paragraph">
-<p>The repository has a specific layout that needs to be followed. The directory structure follows the pattern</p>
-</div>
-<div class="paragraph">
-<p><code>/&lt;artifact name&gt;/&lt;user-package&gt;/&lt;artifact version&gt;/</code>, e.g.
-<code>/minecraft/io.verticle.apex.minecraft/0.1/</code>
-or
-<code>/jenkins/com.foo.bar/2.1/</code>.</p>
-</div>
-<div class="paragraph">
-<p>Inside this directory there are a couple of noteworthy files:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>meta.json</code> - package descriptor file</p>
-</li>
-<li>
-<p><code>&lt;metricqualifier&gt;.json</code> - instrumentation definition file (per qualified metric)</p>
-</li>
-<li>
-<p><code>&lt;metricqualifier&gt;.groovy</code> - optional groovy script for a <code>BasicScriptedHandler</code></p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="instrumentation-repository">1.3.3. Instrumentation Repository</h4>
-<div class="paragraph">
-<p>This Github based repo is supposed to store ready-to-use instrumentations for common software products. It is designed as contribution catalog and will be extended gradually using PRs. If you have some neat instrumentation configuration built for APEX - this is the place to share.</p>
-</div>
-<div class="paragraph">
-<p>It also houses a configuration template to help you start creating your own. Simply fork the repo on Github and adjust existing configs to your needs.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="apex-service">1.3.4. APEX Service</h4>
-<div class="paragraph">
-<p>This is the data sink where collectors send their gathered data to. We are providing two different approaches here:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Roll your own by cloning our Spring Boot template project on Github (<a href="https://github.com/verticle-io/apex-service-template" class="bare">https://github.com/verticle-io/apex-service-template</a>). Messaging is already in and you can extend it to your needs.</p>
-</li>
-<li>
-<p>Use our upcoming cloud service offering which is currently prepared for beta.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p> <br>
- <br></p>
-</div>
-<hr>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="system-requirements">2. System requirements</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="for-the-target-machine">2.1. for the target machine</h3>
-<div class="paragraph">
-<div class="title">JVM</div>
-<p>APEX packages use JVM features like java agents and instrumentation.</p>
-</div>
-<div class="paragraph">
-<p>You will need a Sun/Oracle JDK version &gt;= 8.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<div class="title">Note</div>
-</td>
-<td class="content">
-The code is currently developed for Java 8. We will backport parts of it to make it run smoothly with previous version up to Java 1.5
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<div class="title">git</div>
-<p>The collector is using git to access his instrumentations.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="for-the-service-machine">2.2. for the service machine</h3>
-<div class="paragraph">
-<p>In case you build your own service based on our service template you will need:</p>
-</div>
-<div class="paragraph">
-<div class="title">JVM</div>
-<p>You will need a Sun/Oracle JDK version &gt;= 8.</p>
-</div>
-<div class="paragraph">
-<div class="title">MVN</div>
-<p>The build is based on maven. Either install the lastest version or use the wrapper mvnw.</p>
-</div>
-<div class="paragraph">
-<p> <br>
- <br></p>
-</div>
-<hr>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="quickstart">3. Quickstart</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>This guide will take approx. 15 minutes to walk though.</p>
-</div>
-<div class="paragraph">
-<p>We will setup the individual components of the APEX toolkit: Install the <code>collector</code>, configure and change instrumentation configuration using the <code>instrumentation repository</code> and create a small consuming service using the <code>apex service template</code> project.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<div class="title">Note</div>
-</td>
-<td class="content">
-Instructions are brief. If you want to dig deeper we add hints to other parts of the docs.
-</td>
-</tr>
-</table>
-</div>
-<div class="sect2">
-<h3 id="preparations">3.1. Preparations</h3>
-<div class="paragraph">
-<p>Create a directory to for the setup. We will call it <code>&lt;APEX_HOME&gt;</code> further on.</p>
-</div>
-<div class="sect3">
-<h4 id="retrieve-artifacts-and-configurations">3.1.1. Retrieve artifacts and configurations</h4>
-<div class="paragraph">
-<div class="title">Step 1:</div>
-<p>Retrieve the latest binary release of the collector at <a href="https://github.com/verticle-io/apex-toolkit/releases/" class="bare">https://github.com/verticle-io/apex-toolkit/releases/</a> and place it to APEX_HOME</p>
-</div>
-<div class="paragraph">
-<div class="title">Step 2:</div>
-<p>Fork and clone the instrumentation repository on GitHub.
-Head over to <a href="https://github.com/verticle-io/apex-instrumentation-repo" class="bare">https://github.com/verticle-io/apex-instrumentation-repo</a> and click the fork button. We will reference to the fork as <code>&lt;FORKED_REPO&gt;</code>.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">$&gt; cd &lt;APEX_HOME&gt;
-$&gt; git clone &lt;FORKED_REPO&gt;.git</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<div class="title">Step 3:</div>
-<p>Finally clone and compile the apex service template.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">$&gt; cd &lt;APEX_HOME&gt;
-$&gt; git clone https://github.com/verticle-io/apex-service-template.git
-$&gt; cd apex-service-template
-# compile using the maven wrapper
-$&gt; ./mvnw install</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Your <code>&lt;APEX_HOME&gt;</code> directory now should look like this:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">apexAgent-&lt;version&gt;.jar
 
-apex-instrumentation-repo
-    /tomcat/v8/io.verticle.apex.instrumentation.tomcat8/meta.json
-    / ...
 
-apex-service-template
-    /pom.xml
-    /src/main/java
-    / ...</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Now you are done with the preparations. Lets install and configure APEX to your target application next.</p>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="installation">3.2. Installation</h3>
-<div class="sect3">
-<h4 id="apply-the-collector-to-target">3.2.1. Apply the Collector to target</h4>
-<div class="paragraph">
-<p>Head over to your target application and add the following params to your JVM:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">-javaagent:/&lt;APEX_HOME&gt;/apexAgent-0.5-all.jar=/&lt;APEX_HOME&gt;/myApexAgentConfig.properties</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Now your application will load the APEX Collector Agent. Lets configure it&#8217;s behaviour fist.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="configure-the-collector">3.2.2. Configure the Collector</h4>
-<div class="paragraph">
-<p>Create a configuration file called <code>&lt;APEX_HOME&gt;/myApexAgentConfig.properties</code> in an editor and adjust the settings.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash"># Transport settings. APEX can report via AMQP, REST and ELK-Beat
-# [amqp,http,beat]
-verticle.apex.service.method=http
+	<br>
+		<div class="techimage">
+				<img src="/images/apexsimple.jpg" class="img-responsive" alt="Responsive image">
+		</div>
 
-# http and beat
-verticle.apex.service.method.http.debug=false
-verticle.apex.service.uri=http://127.0.0.1:9005
+		<h2>APEX helps getting better visibility and understanding of what is happening in the software products' application layer during runtime.
+		</h2><h2>Designed to accelerate application analytics, debugging and monitoring.</h2>
+<br><br>
 
-# http only
-verticle.apex.service.username=user
-verticle.apex.service.password=password
+	<div class="row">
+		<div class="col-md-4">
+			<h3>deployed as sidekick app, no codebase cluttering</h3>
+			Script injection is done at runtime via the collector agent. Cleanly separated and stored in a git repository.
+		</div>
+		<div class="col-md-4">
+			<h3>DIY toolkit, ultimately customizable</h3>
+			Pick your source targets, use preconfigured handlers or just build your own. Extract metrics and data of your choice.
+		</div>
+		<div class="col-md-4">
+			<h3>sample receipes for instrumentation</h3>
+			Find ready-to-use configurations and instrumentation code in our github repository. Ready to be forked and tweaked.
+		</div>
+	</div>
 
-# amqp only
-verticle.apex.mq.server=127.0.0.1
-verticle.apex.mq.server.port=5672
 
-# Repository Settings. APEX will be instrumented from the configuration within this repository.
+</div>
 
-# the local repo path (where to clone to)
-verticle.apex.instrumentation.config.path=/var/opt/apex/repo/
 
-# the external git repository (can be anywhere)
-verticle.apex.instrumentation.remoterepository.uri=https://github.com/verticle-io/apex-instrumentation-repo.git
-verticle.apex.instrumentation.remoterepository.username=user
-verticle.apex.instrumentation.remoterepository.password=pass
-verticle.apex.instrumentation.remoterepository.update=true</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="configure-instrumentation">3.3. Configure Instrumentation</h3>
-<div class="paragraph">
-<p>Now the tricky part. Which code of the target system do you want to instrument?</p>
-</div>
-<div class="paragraph">
-<p>Check your &lt;FORKED_REPO&gt; to get an idea on how to attach. Check out the minimal project at <code>&lt;APEX_HOME&gt;/apex-instrumentation-repo/minimal</code>.</p>
-</div>
-<div class="paragraph">
-<p>Open the the <code>minimal.json</code> and adjust</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>the target class:
-<mark>TODO</mark></p>
-</li>
-<li>
-<p>the signature classes:
-<mark>TODO</mark></p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>If the targeting is done right your target application will print out <code>Foo? Bar!</code> when the target is executed.</p>
-</div>
-<div class="paragraph">
-<p>Lets give our installation a spin.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="run">3.4. Run</h3>
-<div class="paragraph">
-<div class="title">Step 1:</div>
-<p>Start the APEX Service template:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">$&gt; cd &lt;APEX_HOME&gt;/apex-service-template
-$&gt; ./mvnw spring-boot:run</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<div class="title">Step 2:</div>
-<p>Start your target application</p>
-</div>
-<div class="paragraph">
-<p>Well, you know best how this works. The logfile should print some APEX related stuff, e.g. configuration bootstrapping:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">***********************************************************************
-***                     APEX COLLECTOR Configuration                ***
-***********************************************************************</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>and you shoud see something like</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">&lt;apex&gt; trying to weave ...
-&lt;apex&gt; weaving method ...
-&lt;apex&gt; successfully weaved method ...</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>And finally our beloved</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">Foo? Bar!</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p> <br>
- <br></p>
-</div>
-<hr>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="sdk-extend">4. Extending the APEX Collector Agent</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p><strong>@since 0.7</strong></p>
-</div>
-<div class="paragraph">
-<p>With release 0.7 the SDK and the API of the apexAgent collector have been open sourced.
-It is still in a very early phase and subject to change.</p>
-</div>
-<div class="paragraph">
-<p>The SDK allows you to write your own Handlers to be processed by the Collector.
-You can create your own extension and deploy it as an additional agent.</p>
-</div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<div class="title">Warning</div>
-</td>
-<td class="content">
-Since there are no limitations in what your handlers can do you should test them thoroughly before applying it to a critical system!
-</td>
-</tr>
-</table>
-</div>
-<div class="sect2">
-<h3 id="setting-up-a-new-extension-project">4.1. Setting up a new Extension Project</h3>
-<div class="paragraph">
-<p>Clone and open the example project provided with the <a href="https://github.com/verticle-io/apex-toolkit/tree/master/apexAgent-ext">SDK</a>.
-Now either use and change the apexAgent-ext submodule to your needs or copy the structure to a new project (for this guide we assume that you change it).</p>
-</div>
-<div class="sect3">
-<h4 id="implement-a-custom-handler">4.1.1. Implement a custom Handler</h4>
-<div class="paragraph">
-<p>This project skeleton comes with a gradle based build and a
-<a href="https://github.com/verticle-io/apex-toolkit/blob/master/apexAgent-ext/src/main/java/io/verticle/oss/apex/agent/ext/bootstrap/MyHandler.java">sample</a>
- handler class to extend.</p>
-</div>
-<div class="paragraph">
-<p>All handler methods will be called when your target configuration (class methods and constructors) matches.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>handle()</code> will be called at start and end of the method</p>
-</li>
-<li>
-<p><code>handleBefore()</code> at the start only</p>
-</li>
-<li>
-<p><code>handleAfter()</code> at the end only</p>
-</li>
-</ul>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">public class MyHandler implements Handler {
+	<br><br>
 
-    static final Logger logger = LoggerFactory.getLogger(MyHandler.class);
 
-    /**
-     * The handle method will be called after and before when your handler matches
-     * a classmethod for execution.
-     * It will supply a context object that includes e.g. the current instance
-     */
-    public void handle(AdvisorContext advisorContext) {
-      logger.info("MyHandler handle() called");
-    }
 
-    /**
-     * Same as above but only executed at the start of the matching classmethod
-     */
-    public void handleBefore(AdvisorContext advisorContext) {
-      logger.info("MyHandler handleBefore() called");
-    }
+	<div class="row">
+		<div class="col-md-4">
+			<hr noshade/>
+		</div>
 
-    /**
-     * Same as above but only executed at the end of the matching classmethod
-     */
-    public void handleAfter(AdvisorContext advisorContext) {
-      logger.info("MyHandler handleAfter() called");
-    }
+		<div class="col-md-4 text-center">
+			 usecases
+		</div
 
-    /**
-     * You can configure options for your handler, they will be injected here as a Map
-     */
-    public void setOptions(Map&lt;HandlerOption, Object&gt; map) {
+		<div class="col-md-4">
+			<hr noshade/>
+		</div>
+	</div>
 
-    }
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p><br>
-The <em>AdvisorContext</em> provides accessors to the current instance and enables your handler to</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>get the method signature&#8217;s arguments and types,</p>
-</li>
-<li>
-<p>get the return value and its types of the method</p>
-</li>
-<li>
-<p>and get the instantiated class.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="sending-messages">4.1.2. Sending Messages</h4>
-<div class="paragraph">
-<p>Sending messages can be done by creating a Message object</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">public void handleAfter(AdvisorContext advisorContext) {
-      logger.info("MyHandler handleAfter() called");
+	<div class="row">
+		<div class="col-md-5  text-center">
+			<h2>Application-Layer Monitoring</h2>
+				<p>
+					Lower the MTTR by improving your visibility on operations to meet your SLAs. Pick the neuralgic points in your business logic, trace KPIs and record crucial information at runtime.
+				</p>
+		</div>
+		<div class="col-md-2">
+			&nbsp;
+		</div>
+		<div class="col-md-5  text-center">
+			<h2>Runtime Debugging</h2>
+				<p>
+					Track system behaviour with minimal effort, dive into any implementation context or trigger methods from outside. Share your debugging configuration with the team using git.
+				</p>
+		</div>
+	</div>
 
-      // use the NamingStrategy to create proper metric qualifiers
-      // the domain is related to the area where the metric originates
-      String name = DefaultNamingStrategy.getInstrumentedAdviceName(advisorContext);
-      MetricMessage message = new MetricMessage(Domain.application, name, new Date());
+	<br>
 
-      // you can add any amount of field to the message.
-      message.addField("correlationId", advisorContext.getCorrelationId());
-      message.addField("trigger", trigger);
-      message.addField("args", args);
+	<h1>Example</h1>
 
-      try {
-          // always access via the CollectorFactory
-          ApexCollectorFactory.get().reportDirect(this.getClass(), message);
-      } catch (Exception e) {
-          logger.error("Could not send message", e);
-      }
-}</code></pre>
+	<p>In order to get familiar with the mechanisms, we demonstrate how easy APEX can be applied to a standard Apache Tomcat Webserver, tracing the deployments done on the container. </p>
+
+
+	<br>
+	<h3>Step1: Configurations and scripts for instrumentation</h3>
+	We define our target classes and methods to hook into and apply the script handler. It will run a groovy script on each execution. The script will report the currently deployed webapp contexts.
+	<div id="window">
+		<div id="toolbar">
+			<div class="top">
+				<div id="lights">
+					<div class="light red">
+						<div class="glyph">×</div>
+						<div class="shine"></div>
+						<div class="glow"></div>
+					</div>
+					<div class="light yellow">
+						<div class="glyph">-</div>
+						<div class="shine"></div>
+						<div class="glow"></div>
+					</div>
+					<div class="light green">
+						<div class="glyph">+</div>
+						<div class="shine"></div>
+						<div class="glow"></div>
+					</div>
+				</div>
+				<div id="title">
+
+					instrumentation code
+				</div>
+				<div id="bubble">
+					<div class="shine"></div>
+					<div class="glow"></div>
+				</div>
+			</div>
+		</div>
+		<div id="body">
+
+			<span class="shell_prompt">$  cat ./localrepo/tomcat/io.verticle.apex.tomcat/8.5.6/deployedApps.json</span>
+			<br>{
+			<br>&nbsp;&nbsp;"meta" : {
+			<br>&nbsp;&nbsp;&nbsp;&nbsp;"purpose" : "show deployed webapps"
+			<br>&nbsp;&nbsp;},
+			<br>&nbsp;&nbsp;"qualifier" : "deployedapps",
+			<span class="shell_highlight">
+			<br>&nbsp;&nbsp;"targetClass" : "org.apache.catalina.startup.HostConfig",</span>
+			<br>&nbsp;&nbsp;"instrumentationInstructions" : [
+			<br>&nbsp;&nbsp;{
+			<br>&nbsp;&nbsp;&nbsp;&nbsp;"@class" : "io.verticle.oss.apex.agent.instrument.repository.model.instrumentation.InstrumentationInstructionModel",
+			<br>&nbsp;&nbsp;&nbsp;&nbsp;"qualifier" : "tomcat.deployedapps",
+			<span class="shell_highlight"><br>&nbsp;&nbsp;&nbsp;&nbsp;"methodName" : "deployWARs",
+			<br>&nbsp;&nbsp;&nbsp;&nbsp;"signatureClasses" : ["java.io.File","[Ljava.lang.String;"],</span>
+			<br>&nbsp;&nbsp;&nbsp;&nbsp;"handlers" : [ {
+			<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"@class" : "io.verticle.oss.apex.agent.instrument.repository.model.instrumentation.HandlerModel",
+			<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"handlerClass" : "io.verticle.oss.apex.agent.sdk.handler.BasicScriptedHandler",
+			<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"options" : {
+			<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"groovy" : "DeployedApps.groovy"
+			<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+			<br>&nbsp;&nbsp;&nbsp;&nbsp;} ],
+			<br>&nbsp;&nbsp;&nbsp;&nbsp;"enabled" : true,
+			<br>&nbsp;&nbsp;&nbsp;&nbsp;"constructor" : false
+			<br>&nbsp;&nbsp;} ]
+			<br>}
+
+			<br>
+
+			<span class="shell_prompt">$  cat ./localrepo/tomcat/io.verticle.apex.tomcat/8.5.6/DeployedApps.groovy</span>
+			<br>// A simple groovy script that gets executed on each instrumented method call
+			<br>def execute(){
+			<br>&nbsp;&nbsp;&nbsp;&nbsp;println("method executed")
+			<br>&nbsp;&nbsp;&nbsp;&nbsp;def instance = context.getInstance()
+			<br>&nbsp;&nbsp;&nbsp;&nbsp;instance.serviced.each{
+			<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;println("serviced: ${it.key}")
+			<br>&nbsp;&nbsp;&nbsp;&nbsp;}
+			<br>&nbsp;&nbsp;&nbsp;&nbsp;instance.deployed.each{
+			<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;println("deployed: ${it.key}")
+			<br>&nbsp;&nbsp;&nbsp;&nbsp;}
+			<br>&nbsp;&nbsp;&nbsp;&nbsp;println("file:" + arg1.toString())
+			<br>&nbsp;&nbsp;&nbsp;&nbsp;println("contexts:" + arg2.toString())
+			<span class="shell_highlight"><br>&nbsp;&nbsp;&nbsp;&nbsp;message.addField("deployments",  arg2.toString())</span>
+			<br>}
+
+
+		</div>
+	</div>
+
+<h3>Step2: Starting Tomcat with the Apex Collector Agent</h3>
+The APEX collector agent is attached to Tomcat via the -javaagent directive. It will connect to the configured git repository to
+checkout/update the instructions from Step1. Once target classes are loaded by the Classloader it will try to weave in the hooks. Any call to the instrumented method will trigger the handlers on method entry and exit.
+
+
+<div id="window">
+	<div id="toolbar">
+		<div class="top">
+			<div id="lights">
+				<div class="light red">
+					<div class="glyph">×</div>
+					<div class="shine"></div>
+					<div class="glow"></div>
+				</div>
+				<div class="light yellow">
+					<div class="glyph">-</div>
+					<div class="shine"></div>
+					<div class="glow"></div>
+				</div>
+				<div class="light green">
+					<div class="glyph">+</div>
+					<div class="shine"></div>
+					<div class="glow"></div>
+				</div>
+			</div>
+			<div id="title">
+
+				tomcat 8 with apex collector
+			</div>
+			<div id="bubble">
+				<div class="shine"></div>
+				<div class="glow"></div>
+			</div>
+		</div>
+	</div>
+	<div id="body">
+<span class="shell_prompt">$  ./catalina.sh run</span>
+<br>
+<br>Using CATALINA_BASE:   /Users/x/github/apache-tomcat-8.5.6
+<br>Using CATALINA_HOME:   /Users/x/github/apache-tomcat-8.5.6
+
+<br><span class="shell_comment"># starting apex agent ...</span>
+<br>...
+<br>INFO  i.v.o.a.a.bootstrap.BootstrapAgent - <apex> verticle.io APM Agent starting
+<br>INFO  i.v.o.a.a.bootstrap.BootstrapAgent - <apex> premain method invoked with args: <br>/Users/x/github/apexAgent/apmAgentConfig.properties and inst: sun.instrument.InstrumentationImpl@4e515669
+<br>INFO  i.v.o.a.a.c.config.AgentConfigurer - <apex> Configuring MetricsServer Remote
+<br>INFO  i.v.o.a.a.c.c.AgentConfiguration - <apex> reading agent configuration from <br>/Users/x/github/apexAgent/apmAgentConfig.properties
+<br>INFO  i.v.o.a.a.c.c.AgentConfiguration - <apex> APM RabbitMQ instance configured ... OK
+<br>INFO  i.v.o.a.a.c.c.AgentConfiguration - <apex> APM Instrumentation Configuration configured ... OK
+<br>INFO  i.v.o.a.a.c.c.AgentConfiguration - <apex> done reading agent configuration
+<br><span class="shell_comment"># fetching instrumenation configuration from git</span>
+<br>INFO  i.v.o.a.a.i.InstrumentationRegistry - not updating repository (disabled)
+
+<br>INFO  i.v.o.a.a.i.InstrumentationRegistry - <span class="shell_highlight"><apex>&nbsp;&nbsp;***********************************************************************</span>
+<br>INFO  i.v.o.a.a.i.InstrumentationRegistry - <span class="shell_highlight"><apex>&nbsp;&nbsp;***                     APEX COLLECTOR Configuration               ***</span>
+<br>INFO  i.v.o.a.a.i.InstrumentationRegistry - <span class="shell_highlight"><apex>&nbsp;&nbsp;***********************************************************************</span>
+<br>INFO  i.v.o.a.a.i.InstrumentationRegistry - <span class="shell_highlight"><apex>&nbsp;&nbsp;* targets:</span>
+<br>INFO  i.v.o.a.a.i.InstrumentationRegistry - <span class="shell_highlight"><apex>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;asset:       tomcat</span>
+<br>INFO  i.v.o.a.a.i.InstrumentationRegistry - <span class="shell_highlight"><apex>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;package:     io.verticle.apex.tomcat / 8.5.6</span>
+<br>INFO  i.v.o.a.a.i.InstrumentationRegistry - <span class="shell_highlight"><apex>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fingerprint: -</span>
+<br>INFO  i.v.o.a.a.i.InstrumentationRegistry - <span class="shell_highlight"><apex>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;target:      org.apache.catalina.startup.HostConfig</span>
+<br>INFO  i.v.o.a.a.i.InstrumentationRegistry - <span class="shell_highlight"><apex>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;qualifier:   deployedapps</span>
+<br>INFO  i.v.o.a.a.i.InstrumentationRegistry - <span class="shell_highlight"><apex>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- method:    deployWARs :: [class java.io.File, class [Ljava.lang.String;]</span>
+<br>INFO  i.v.o.a.a.i.InstrumentationRegistry - <span class="shell_highlight"><apex>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- qualifier: tomcat.deployedapps</span>
+<br>INFO  i.v.o.a.a.i.InstrumentationRegistry - <span class="shell_highlight"><apex>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- handler: class io.verticle.oss.apex.agent.sdk.handler.BasicScriptedHandler</span>
+<br>INFO  i.v.o.a.a.i.InstrumentationRegistry - <span class="shell_highlight"><apex>&nbsp;&nbsp;***********************************************************************</span>
+<br><span class="shell_comment"># attaching to apex service</span>
+<br>INFO  i.v.o.a.a.c.t.h.ApexServiceHTTPAdapter - <apex> initializing ApexServiceHTTPAdapter
+<br>INFO  i.v.o.a.a.bootstrap.BootstrapAgent - <apex> Start sending heartbeats to service ...
+<br>DEBUG i.v.o.a.a.bootstrap.BootstrapAgent - <apex> sendHeartbeat
+<br>[ApexService#sendHeartbeat] ---> POST http://localhost:9005/collector/heartbeat HTTP/1.1
+<br><span class="shell_comment"># weaving marked target classes on class loading</span>
+<br>INFO  i.v.o.a.a.i.AgentClassFileTransformer - <span class="shell_highlight"><apex> trying to weave org.apache.catalina.startup.HostConfig</span>
+<br>INFO  i.v.o.a.a.i.AgentClassFileTransformer - <span class="shell_highlight"><apex> weaving method org.apache.catalina.startup.HostConfig : deployWARs : [class java.io.File, class [Ljava.lang.String;]</span>
+<br>INFO  i.v.o.a.a.i.AgentClassFileTransformer - <span class="shell_highlight"><apex> successfully weaved method org.apache.catalina.startup.HostConfig : deployWARs : [class java.io.File, class [Ljava.lang.String;]</span>
+<br>...
+<br>INFORMATION [main] org.apache.coyote.AbstractProtocol.init Initializing ProtocolHandler ["http-nio-8080"]
+<br>INFORMATION [main] org.apache.tomcat.util.net.NioSelectorPool.getSharedSelector Using a shared selector for servlet write/read
+<br>INFORMATION [main] org.apache.coyote.AbstractProtocol.init Initializing ProtocolHandler ["ajp-nio-8009"]
+<br>INFORMATION [main] org.apache.tomcat.util.net.NioSelectorPool.getSharedSelector Using a shared selector for servlet write/read
+<br>INFORMATION [main] org.apache.catalina.startup.Catalina.load Initialization processed in 1444 ms
+<br>INFORMATION [main] org.apache.catalina.core.StandardService.startInternal Starting service Catalina
+<br>INFORMATION [main] org.apache.catalina.core.StandardEngine.startInternal Starting Servlet Engine: Apache Tomcat/8.5.6
+<br>...
+<br><span class="shell_comment"># hook triggered, executing handler</span>
+<span class="shell_highlight">
+<br>DEBUG i.v.o.a.a.instrument.AdvisorDelegate - <apex> instance: org.apache.catalina.startup.HostConfig@3244da18
+<br>INFO  i.v.o.a.a.s.h.BasicScriptedHandler - <apex> Loading groovy script /Users/x/dev/apexrepo/tomcat/io.verticle.apex.tomcat/8.5.6/DeployedApps.groovy
+<br>INFO  i.v.o.a.a.s.h.BasicScriptedHandler - <apex> Parsing handlerscript
+<br>INFO  i.v.o.a.a.s.h.BasicScriptedHandler - <apex> Invoking handlerscript
+</span>
+<br><span class="shell_comment"># handler output</span>
+<br>method executed
+<br>file:/Users/x/github/apache-tomcat-8.5.6/webapps
+<br>contexts:[host-manager, manager]
+<br>
+<br><span class="shell_comment"># sending gathered data to apex service</span>
+<br>INFO  i.v.o.apex.agent.collector.Collector - <apex> VERTICLE.IO COLLECTOR starts harvesting ...
+<br>INFO  i.v.o.apex.agent.collector.Collector - <apex> VERTICLE.IO COLLECTOR ID COLLECTOR-CHnrN9gQcZ
+<br>INFO  i.v.o.a.a.c.APMCollectorFactory - instantiated class io.verticle.oss.apex.agent.collector.Collector
+<br>[ApexService#sendMetric] ---> POST http://localhost:9005/collector/metrics HTTP/1.1
+<br>[ApexService#sendMetric] {
+<br>&nbsp;&nbsp;"meta" : {
+<br>&nbsp;&nbsp;&nbsp;&nbsp;"src_ip" : "192.168.188.21",
+<br>&nbsp;&nbsp;&nbsp;&nbsp;"src_mac_hash" : "9f4ada0e81563c88dd66000e200a1dbb782c0438",
+<br>&nbsp;&nbsp;&nbsp;&nbsp;"src_collect" : "COLLECTOR-CHnrN9gQcZ",
+<br>&nbsp;&nbsp;&nbsp;&nbsp;"@timestamp" : 1477574835792,
+<br>&nbsp;&nbsp;&nbsp;&nbsp;"src_class" : "io.verticle.oss.apex.agent.sdk.handler.BasicScriptedHandler",
+<br>&nbsp;&nbsp;&nbsp;&nbsp;"domain" : "application",
+<br>&nbsp;&nbsp;&nbsp;&nbsp;"qualifier" : "org.apache.catalina.startup.HostConfig"
+<br>&nbsp;&nbsp;},
+<br>&nbsp;&nbsp;"metrics" : {
+<span class="shell_highlight"><br>&nbsp;&nbsp;&nbsp;&nbsp;"deployments" : "[host-manager, manager]"</span>
+<br>&nbsp;&nbsp;}
+<br>}
+
+	</div>
 </div>
+
+<h3>Step3: The listening apex service</h3>
+The gathered information is routed to the apex service. The basic implementation template will just output incoming data to the console.
+Fork the template project and extend it according to your needs.
+
+<div id="window">
+	<div id="toolbar">
+		<div class="top">
+			<div id="lights">
+				<div class="light red">
+					<div class="glyph">×</div>
+					<div class="shine"></div>
+					<div class="glow"></div>
+				</div>
+				<div class="light yellow">
+					<div class="glyph">-</div>
+					<div class="shine"></div>
+					<div class="glow"></div>
+				</div>
+				<div class="light green">
+					<div class="glyph">+</div>
+					<div class="shine"></div>
+					<div class="glow"></div>
+				</div>
+			</div>
+			<div id="title">
+
+				apex service template
+			</div>
+			<div id="bubble">
+				<div class="shine"></div>
+				<div class="glow"></div>
+			</div>
+		</div>
+	</div>
+	<div id="body">
+		<span class="shell_prompt">$  mvn spring-boot:run</span>
+		<br><span class="shell_comment"># bootstrap omitted</span>
+		<br>...
+		<br>heartbeat 192.168.188.21 9f4ada0e81563c88dd66000e200a1dbb782c0438 COLLECTOR-CHnrN9gQcZ 1477574834051
+		<br>
+		<br>==========
+
+		<span class="shell_highlight"><br>application.org.apache.catalina.startup.HostConfig  2016-10-27T15:27:15.792+02:00</span>
+		<br>----------
+			<span class="shell_highlight"><br>deployments:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        [host-manager, manager]</span>
+		<br>@timestamp:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2016-10-27T15:27:15.792+02:00
+		<br>==========
+		<br>
+		<br>heartbeat 192.168.188.21 9f4ada0e81563c88dd66000e200a1dbb782c0438 COLLECTOR-CHnrN9gQcZ 1477574839051
+		<br>heartbeat 192.168.188.21 9f4ada0e81563c88dd66000e200a1dbb782c0438 COLLECTOR-CHnrN9gQcZ 1477574844055
+		<br>
+		...
+
+	</div>
 </div>
-<div class="paragraph">
-<p>Check out the basic SDK handler implementations to get more ideas. You can also use them as a base implementation and extend them:
-<a href="https://github.com/verticle-io/apex-toolkit/tree/master/apexAgent-sdk/src/main/java/io/verticle/oss/apex/agent/sdk/handler" class="bare">https://github.com/verticle-io/apex-toolkit/tree/master/apexAgent-sdk/src/main/java/io/verticle/oss/apex/agent/sdk/handler</a></p>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="compiling-and-deploying-your-extension">4.2. Compiling and Deploying your Extension</h3>
-<div class="paragraph">
-<p>Create your apexAgent-ext.jar with <code>shadowJar</code> task:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">cd to apex-toolkit directory
-./gradlew -b apexAgent-ext/build.gradle shadowJar</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>and  copy the apexAgent-ext.jar to the machine and place it along the apexAgent-all.jar</p>
-</div>
-<div class="paragraph">
-<p>Change the JVM cmd and place an additional javaagent directive <strong>before</strong> the apexAgent-all jar:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">-javaagent=&lt;PATHTO&gt;/apexAgent-ext.jar -javaagent=&lt;PATHTO&gt;/apexAgent-all.jar=&lt;PATHTO&gt;/apexAgent.properties</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="howtos">5. HOWTOs</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p><mark>WORK_IN_PROGRESS</mark></p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="reference">6. Reference</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p><mark>WORK_IN_PROGRESS</mark></p>
-</div>
-</div>
-</div>
+
+<h1>Docs</h1>
+Interested in details? Check out the <a href="/docs">docs</a> section for a Quick Start Guide and, reference and HOWTOs.
+<br>
+<h1>Licence and Contributing</h1>
+The APEX toolkit is open sourced on github under Apache2 Licence. Give it a spin, fork and contribute.
+
+<p>
+We are happy to receive PRs. Please report issues to the bug tracker on github.</p>
+
 
           </div>
 
           <footer>
-
+            <p>&nbsp;
+            </p>
           </footer>
+
         </div><!-- cover container -->
       </div><!-- site wrapper inner  -->
     </div><!-- site wrapper -->
@@ -806,10 +478,16 @@ The <em>AdvisorContext</em> provides accessors to the current instance and enabl
 
 
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src="/bower_components/bootstrap/assets/js/vendor/jquery.min.js"><\/script>')</script>
-    <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script>hljs.initHighlightingOnLoad();</script>
+
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+    <script>
+      ((window.gitter = {}).chat = {}).options = {
+        room: 'verticle-io/apex'
+      };
+    </script>
+    <script src="https://sidecar.gitter.im/dist/sidecar.v1.js" async defer></script>
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -820,7 +498,6 @@ The <em>AdvisorContext</em> provides accessors to the current instance and enabl
       ga('send', 'pageview');
 
     </script>
-
 
   </body>
 
