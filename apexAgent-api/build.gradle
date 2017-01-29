@@ -1,7 +1,7 @@
 defaultTasks ('jar','uploadArchives')
 
 group 'io.verticle.apex'
-version 'v0.7.1'
+version 'v0.8-SNAPSHOT'
 
 apply plugin: 'java'
 apply plugin: 'maven'

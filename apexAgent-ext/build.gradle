@@ -1,4 +1,4 @@
-version '0.7.1'
+version 'v0.8-SNAPSHOT'
 
 buildscript {
     repositories {
