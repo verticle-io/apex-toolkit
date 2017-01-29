@@ -24,6 +24,7 @@ import io.verticle.apex.commons.oss.collectors.model.Domain;
 import io.verticle.oss.apex.agent.api.ApexCollectorFactory;
 import io.verticle.oss.apex.agent.api.Constants;
 import io.verticle.oss.apex.agent.api.transport.payload.MetricMessage;
+import io.verticle.oss.apex.agent.sdk.ContextCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,18 +48,9 @@ public class BasicScriptedHandler extends AbstractHandler {
     private Map<HandlerOption, Object> handlerOptions = new ConcurrentHashMap<>();
 
     private String handlerScript;
+    private Long handlerScriptLastModified = 0L;
 
 
-    public void loadScript(String handlerScriptPath) {
-        if (handlerScript == null){
-            try {
-                logger.info(Constants.LOGPREFIX + "Loading groovy script " + handlerScriptPath);
-                handlerScript = new Scanner(new File(handlerScriptPath)).useDelimiter("\\Z").next();
-            } catch (FileNotFoundException e) {
-                logger.error(Constants.LOGPREFIX + "Could not load handler script", e);
-            }
-        }
-    }
 
     @Override
     public void handle(AdvisorContext advisorContext) {
@@ -68,16 +60,63 @@ public class BasicScriptedHandler extends AbstractHandler {
     @Override
     public void handleBefore(AdvisorContext advisorContext) {
 
+        MetricMessage message = new MetricMessage(Domain.application, name(advisorContext), new Date());
+        GroovyShell shell = prepareShell(advisorContext, message);
+
+        try {
+            logger.info(Constants.LOGPREFIX + "Parsing handlerscript");
+            Script scrpt = shell.parse(handlerScript);
+            logger.info(Constants.LOGPREFIX + "Invoking handlerscript");
+            scrpt.invokeMethod("before", null);
+        } catch (Exception e) {
+            logger.error(Constants.LOGPREFIX + "could not parse/invoke handler script", e);
+        }
+
+
+        try {
+            if (message.getMetrics().size() > 0)
+                ApexCollectorFactory.get().reportDirect(this.getClass(), message);
+        } catch (Exception e) {
+            logger.error(Constants.LOGPREFIX + "Could not send message", e);
+        }
+    }
+
+    @Override
+    public void handleAfter(AdvisorContext advisorContext) {
+
+        MetricMessage message = new MetricMessage(Domain.application, name(advisorContext), new Date());
+        GroovyShell shell = prepareShell(advisorContext, message);
+
+        try {
+            logger.info(Constants.LOGPREFIX + "Parsing handlerscript");
+            Script scrpt = shell.parse(handlerScript);
+            logger.info(Constants.LOGPREFIX + "Invoking handlerscript");
+            scrpt.invokeMethod("after", null);
+        } catch (Exception e) {
+            logger.error(Constants.LOGPREFIX + "could not parse/invoke handler script", e);
+        }
+
+
+        try {
+            if (message.getMetrics().size() > 0)
+                ApexCollectorFactory.get().reportDirect(this.getClass(), message);
+        } catch (Exception e) {
+            logger.error(Constants.LOGPREFIX + "Could not send message", e);
+        }
+    }
+
+    private GroovyShell prepareShell(AdvisorContext advisorContext, MetricMessage message ){
+
         // locate script file
         String groovyScriptFilename =  (String) options.get(HandlerOption.groovy);
         Path modulePath = advisorContext.getInstrumentationConfig().getMetaReference().getRepositoryModulePath();
         String handlerScriptPath = Paths.get(modulePath.toString(), groovyScriptFilename).toString();
 
-        MetricMessage message = new MetricMessage(Domain.application, name(advisorContext), new Date());
 
 
         Binding binding = new Binding();
         binding.setVariable("context", advisorContext);
+        binding.setVariable("contextCache", ContextCache.getInstance());
         binding.setVariable("message", message);
         binding.setVariable("argsCount", advisorContext.getSignatureArgs().length);
 
@@ -87,26 +126,36 @@ public class BasicScriptedHandler extends AbstractHandler {
         }
 
         GroovyShell shell = new GroovyShell(binding);
+
         try {
             loadScript(handlerScriptPath);
-            logger.info(Constants.LOGPREFIX + "Parsing handlerscript");
-            Script scrpt = shell.parse(handlerScript);
-            logger.info(Constants.LOGPREFIX + "Invoking handlerscript");
-            scrpt.invokeMethod("execute", null);
         } catch (Exception e) {
-            logger.error(Constants.LOGPREFIX + "could not parse/invoke handler script", e);
+            logger.error(Constants.LOGPREFIX + "could not load handler script", e);
         }
 
 
-        try {
-            ApexCollectorFactory.get().reportDirect(this.getClass(), message);
-        } catch (Exception e) {
-            logger.error(Constants.LOGPREFIX + "Could not send message", e);
+        return shell;
+    }
+
+
+    private void loadScript(String handlerScriptPath) {
+        Long handlerScriptLastModifiedNow = 0L;
+
+        File scriptFile = new File(handlerScriptPath);
+        if (scriptFile.exists()){
+            handlerScriptLastModifiedNow = scriptFile.lastModified();
+
+            if (handlerScriptLastModifiedNow > handlerScriptLastModified){
+                try {
+                    logger.info(Constants.LOGPREFIX + "(Re-)Loading groovy script " + handlerScriptPath);
+                    handlerScript = new Scanner(new File(handlerScriptPath)).useDelimiter("\\Z").next();
+                } catch (FileNotFoundException e) {
+                    logger.error(Constants.LOGPREFIX + "Could not load handler script", e);
+                }
+            }
+
+            handlerScriptLastModified = handlerScriptLastModifiedNow;
         }
     }
 
-    @Override
-    public void handleAfter(AdvisorContext advisorContext) {
-        //NOOP
-    }
 }
