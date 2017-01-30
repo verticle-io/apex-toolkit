@@ -43,16 +43,24 @@
 
           <div class="masthead clearfix">
             <div class="">
-              <h3 class="masthead-brand apex_title">apex toolkit<span class="apex_title_white"> : docs</span></h3>
               <nav>
                 <ul class="nav masthead-nav">
-                  <li><a href="/">About</a></li>
-                  <li><a class="active" href="/docs">Docs</a></li>
+                  <li><a  class="active" href="/">About</a></li>
+                  <!--
+                  <li><a href="/quickstart/index.html">Quickstart</a></li>
+                  -->
+                  <li><a href="/examples/index.html">Examples</a></li>
+                  <!--
+                  <li><a href="/integrations/index.html">Integrations</a></li>
+                  -->
+                  <li><a href="/docs/index.html">Docs</a></li>
                   <li><a href="/blog">Blog</a></li>
                   <li><a href="https://gitter.im/verticle-io/apex">Gitter</a></li>
                 </ul>
 
               </nav>
+              <h3 class="masthead-brand apex_title">apex toolkit<span class="apex_title_white"> : docs</span></h3>
+
             </div>
           </div><!-- header -->
           <br><br><br>
@@ -239,7 +247,7 @@ In that callback you have access to the so called <em>AdvisorContext</em> which 
 <div class="title">An example:</div>
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">// A simple groovy script that gets executed on each instrumented method call
-def execute(){
+def before(){
     println("method executed")
 
     // we have some implicit objects here like 'context'  AdvisorContext containing e.g
@@ -264,6 +272,8 @@ def execute(){
     println("arg 1:" + arg1.toString())
 
     // the message object will now be sent to the apex service for further processing.
+
+def after(){
 
 }</code></pre>
 </div>

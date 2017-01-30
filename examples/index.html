@@ -1,0 +1,268 @@
+---
+layout: default
+title: apex data extraction toolkit - examples
+---
+
+<h1>Example: Apache Tomcat</h1>
+
+<p>In order to get familiar with the mechanisms, we demonstrate how easy APEX can be applied to a standard Apache Tomcat Webserver, tracing the deployments done on the container. </p>
+
+
+<br>
+<h3>Step1: Configurations and scripts for instrumentation</h3>
+We define our target classes and methods to hook into and apply the script handler. It will run a groovy script on each execution. The script will report the currently deployed webapp contexts.
+<div id="window">
+  <div id="toolbar">
+    <div class="top">
+      <div id="lights">
+        <div class="light red">
+          <div class="glyph">×</div>
+          <div class="shine"></div>
+          <div class="glow"></div>
+        </div>
+        <div class="light yellow">
+          <div class="glyph">-</div>
+          <div class="shine"></div>
+          <div class="glow"></div>
+        </div>
+        <div class="light green">
+          <div class="glyph">+</div>
+          <div class="shine"></div>
+          <div class="glow"></div>
+        </div>
+      </div>
+      <div id="title">
+
+        instrumentation code
+      </div>
+      <div id="bubble">
+        <div class="shine"></div>
+        <div class="glow"></div>
+      </div>
+    </div>
+  </div>
+  <div id="body">
+
+    <span class="shell_prompt">$  cat ./localrepo/tomcat/io.verticle.apex.tomcat/8.5.6/deployedApps.json</span>
+    <br>{
+    <br>&nbsp;&nbsp;"meta" : {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;"purpose" : "show deployed webapps"
+    <br>&nbsp;&nbsp;},
+    <br>&nbsp;&nbsp;"qualifier" : "deployedapps",
+    <span class="shell_highlight">
+    <br>&nbsp;&nbsp;"targetClass" : "org.apache.catalina.startup.HostConfig",</span>
+    <br>&nbsp;&nbsp;"instrumentationInstructions" : [
+    <br>&nbsp;&nbsp;{
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;"@class" : "io.verticle.oss.apex.agent.instrument.repository.model.instrumentation.InstrumentationInstructionModel",
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;"qualifier" : "tomcat.deployedapps",
+    <span class="shell_highlight"><br>&nbsp;&nbsp;&nbsp;&nbsp;"methodName" : "deployWARs",
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;"signatureClasses" : ["java.io.File","[Ljava.lang.String;"],</span>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;"handlers" : [ {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"@class" : "io.verticle.oss.apex.agent.instrument.repository.model.instrumentation.HandlerModel",
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"handlerClass" : "io.verticle.oss.apex.agent.sdk.handler.BasicScriptedHandler",
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"options" : {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"groovy" : "DeployedApps.groovy"
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;} ],
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;"enabled" : true,
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;"constructor" : false
+    <br>&nbsp;&nbsp;} ]
+    <br>}
+
+    <br>
+
+    <span class="shell_prompt">$  cat ./localrepo/tomcat/io.verticle.apex.tomcat/8.5.6/DeployedApps.groovy</span>
+    <br>// A simple groovy script that gets executed on each instrumented method call
+    <br>def execute(){
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;println("method executed")
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;def instance = context.getInstance()
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;instance.serviced.each{
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;println("serviced: ${it.key}")
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;}
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;instance.deployed.each{
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;println("deployed: ${it.key}")
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;}
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;println("file:" + arg1.toString())
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;println("contexts:" + arg2.toString())
+    <span class="shell_highlight"><br>&nbsp;&nbsp;&nbsp;&nbsp;message.addField("deployments",  arg2.toString())</span>
+    <br>}
+
+
+  </div>
+</div>
+
+<h3>Step2: Starting Tomcat with the Apex Collector Agent</h3>
+The APEX collector agent is attached to Tomcat via the -javaagent directive. It will connect to the configured git repository to
+checkout/update the instructions from Step1. Once target classes are loaded by the Classloader it will try to weave in the hooks. Any call to the instrumented method will trigger the handlers on method entry and exit.
+
+
+<div id="window">
+<div id="toolbar">
+  <div class="top">
+    <div id="lights">
+      <div class="light red">
+        <div class="glyph">×</div>
+        <div class="shine"></div>
+        <div class="glow"></div>
+      </div>
+      <div class="light yellow">
+        <div class="glyph">-</div>
+        <div class="shine"></div>
+        <div class="glow"></div>
+      </div>
+      <div class="light green">
+        <div class="glyph">+</div>
+        <div class="shine"></div>
+        <div class="glow"></div>
+      </div>
+    </div>
+    <div id="title">
+
+      tomcat 8 with apex collector
+    </div>
+    <div id="bubble">
+      <div class="shine"></div>
+      <div class="glow"></div>
+    </div>
+  </div>
+</div>
+<div id="body">
+<span class="shell_prompt">$  ./catalina.sh run</span>
+<br>
+<br>Using CATALINA_BASE:   /Users/x/github/apache-tomcat-8.5.6
+<br>Using CATALINA_HOME:   /Users/x/github/apache-tomcat-8.5.6
+
+<br><span class="shell_comment"># starting apex agent ...</span>
+<br>...
+<br>INFO  i.v.o.a.a.bootstrap.BootstrapAgent - <apex> verticle.io APM Agent starting
+<br>INFO  i.v.o.a.a.bootstrap.BootstrapAgent - <apex> premain method invoked with args: <br>/Users/x/github/apexAgent/apmAgentConfig.properties and inst: sun.instrument.InstrumentationImpl@4e515669
+<br>INFO  i.v.o.a.a.c.config.AgentConfigurer - <apex> Configuring MetricsServer Remote
+<br>INFO  i.v.o.a.a.c.c.AgentConfiguration - <apex> reading agent configuration from <br>/Users/x/github/apexAgent/apmAgentConfig.properties
+<br>INFO  i.v.o.a.a.c.c.AgentConfiguration - <apex> APM RabbitMQ instance configured ... OK
+<br>INFO  i.v.o.a.a.c.c.AgentConfiguration - <apex> APM Instrumentation Configuration configured ... OK
+<br>INFO  i.v.o.a.a.c.c.AgentConfiguration - <apex> done reading agent configuration
+<br><span class="shell_comment"># fetching instrumenation configuration from git</span>
+<br>INFO  i.v.o.a.a.i.InstrumentationRegistry - not updating repository (disabled)
+
+<br>INFO  i.v.o.a.a.i.InstrumentationRegistry - <span class="shell_highlight"><apex>&nbsp;&nbsp;***********************************************************************</span>
+<br>INFO  i.v.o.a.a.i.InstrumentationRegistry - <span class="shell_highlight"><apex>&nbsp;&nbsp;***                     APEX COLLECTOR Configuration               ***</span>
+<br>INFO  i.v.o.a.a.i.InstrumentationRegistry - <span class="shell_highlight"><apex>&nbsp;&nbsp;***********************************************************************</span>
+<br>INFO  i.v.o.a.a.i.InstrumentationRegistry - <span class="shell_highlight"><apex>&nbsp;&nbsp;* targets:</span>
+<br>INFO  i.v.o.a.a.i.InstrumentationRegistry - <span class="shell_highlight"><apex>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;asset:       tomcat</span>
+<br>INFO  i.v.o.a.a.i.InstrumentationRegistry - <span class="shell_highlight"><apex>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;package:     io.verticle.apex.tomcat / 8.5.6</span>
+<br>INFO  i.v.o.a.a.i.InstrumentationRegistry - <span class="shell_highlight"><apex>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fingerprint: -</span>
+<br>INFO  i.v.o.a.a.i.InstrumentationRegistry - <span class="shell_highlight"><apex>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;target:      org.apache.catalina.startup.HostConfig</span>
+<br>INFO  i.v.o.a.a.i.InstrumentationRegistry - <span class="shell_highlight"><apex>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;qualifier:   deployedapps</span>
+<br>INFO  i.v.o.a.a.i.InstrumentationRegistry - <span class="shell_highlight"><apex>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- method:    deployWARs :: [class java.io.File, class [Ljava.lang.String;]</span>
+<br>INFO  i.v.o.a.a.i.InstrumentationRegistry - <span class="shell_highlight"><apex>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- qualifier: tomcat.deployedapps</span>
+<br>INFO  i.v.o.a.a.i.InstrumentationRegistry - <span class="shell_highlight"><apex>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- handler: class io.verticle.oss.apex.agent.sdk.handler.BasicScriptedHandler</span>
+<br>INFO  i.v.o.a.a.i.InstrumentationRegistry - <span class="shell_highlight"><apex>&nbsp;&nbsp;***********************************************************************</span>
+<br><span class="shell_comment"># attaching to apex service</span>
+<br>INFO  i.v.o.a.a.c.t.h.ApexServiceHTTPAdapter - <apex> initializing ApexServiceHTTPAdapter
+<br>INFO  i.v.o.a.a.bootstrap.BootstrapAgent - <apex> Start sending heartbeats to service ...
+<br>DEBUG i.v.o.a.a.bootstrap.BootstrapAgent - <apex> sendHeartbeat
+<br>[ApexService#sendHeartbeat] ---> POST http://localhost:9005/collector/heartbeat HTTP/1.1
+<br><span class="shell_comment"># weaving marked target classes on class loading</span>
+<br>INFO  i.v.o.a.a.i.AgentClassFileTransformer - <span class="shell_highlight"><apex> trying to weave org.apache.catalina.startup.HostConfig</span>
+<br>INFO  i.v.o.a.a.i.AgentClassFileTransformer - <span class="shell_highlight"><apex> weaving method org.apache.catalina.startup.HostConfig : deployWARs : [class java.io.File, class [Ljava.lang.String;]</span>
+<br>INFO  i.v.o.a.a.i.AgentClassFileTransformer - <span class="shell_highlight"><apex> successfully weaved method org.apache.catalina.startup.HostConfig : deployWARs : [class java.io.File, class [Ljava.lang.String;]</span>
+<br>...
+<br>INFORMATION [main] org.apache.coyote.AbstractProtocol.init Initializing ProtocolHandler ["http-nio-8080"]
+<br>INFORMATION [main] org.apache.tomcat.util.net.NioSelectorPool.getSharedSelector Using a shared selector for servlet write/read
+<br>INFORMATION [main] org.apache.coyote.AbstractProtocol.init Initializing ProtocolHandler ["ajp-nio-8009"]
+<br>INFORMATION [main] org.apache.tomcat.util.net.NioSelectorPool.getSharedSelector Using a shared selector for servlet write/read
+<br>INFORMATION [main] org.apache.catalina.startup.Catalina.load Initialization processed in 1444 ms
+<br>INFORMATION [main] org.apache.catalina.core.StandardService.startInternal Starting service Catalina
+<br>INFORMATION [main] org.apache.catalina.core.StandardEngine.startInternal Starting Servlet Engine: Apache Tomcat/8.5.6
+<br>...
+<br><span class="shell_comment"># hook triggered, executing handler</span>
+<span class="shell_highlight">
+<br>DEBUG i.v.o.a.a.instrument.AdvisorDelegate - <apex> instance: org.apache.catalina.startup.HostConfig@3244da18
+<br>INFO  i.v.o.a.a.s.h.BasicScriptedHandler - <apex> Loading groovy script /Users/x/dev/apexrepo/tomcat/io.verticle.apex.tomcat/8.5.6/DeployedApps.groovy
+<br>INFO  i.v.o.a.a.s.h.BasicScriptedHandler - <apex> Parsing handlerscript
+<br>INFO  i.v.o.a.a.s.h.BasicScriptedHandler - <apex> Invoking handlerscript
+</span>
+<br><span class="shell_comment"># handler output</span>
+<br>method executed
+<br>file:/Users/x/github/apache-tomcat-8.5.6/webapps
+<br>contexts:[host-manager, manager]
+<br>
+<br><span class="shell_comment"># sending gathered data to apex service</span>
+<br>INFO  i.v.o.apex.agent.collector.Collector - <apex> VERTICLE.IO COLLECTOR starts harvesting ...
+<br>INFO  i.v.o.apex.agent.collector.Collector - <apex> VERTICLE.IO COLLECTOR ID COLLECTOR-CHnrN9gQcZ
+<br>INFO  i.v.o.a.a.c.APMCollectorFactory - instantiated class io.verticle.oss.apex.agent.collector.Collector
+<br>[ApexService#sendMetric] ---> POST http://localhost:9005/collector/metrics HTTP/1.1
+<br>[ApexService#sendMetric] {
+<br>&nbsp;&nbsp;"meta" : {
+<br>&nbsp;&nbsp;&nbsp;&nbsp;"src_ip" : "192.168.188.21",
+<br>&nbsp;&nbsp;&nbsp;&nbsp;"src_mac_hash" : "9f4ada0e81563c88dd66000e200a1dbb782c0438",
+<br>&nbsp;&nbsp;&nbsp;&nbsp;"src_collect" : "COLLECTOR-CHnrN9gQcZ",
+<br>&nbsp;&nbsp;&nbsp;&nbsp;"@timestamp" : 1477574835792,
+<br>&nbsp;&nbsp;&nbsp;&nbsp;"src_class" : "io.verticle.oss.apex.agent.sdk.handler.BasicScriptedHandler",
+<br>&nbsp;&nbsp;&nbsp;&nbsp;"domain" : "application",
+<br>&nbsp;&nbsp;&nbsp;&nbsp;"qualifier" : "org.apache.catalina.startup.HostConfig"
+<br>&nbsp;&nbsp;},
+<br>&nbsp;&nbsp;"metrics" : {
+<span class="shell_highlight"><br>&nbsp;&nbsp;&nbsp;&nbsp;"deployments" : "[host-manager, manager]"</span>
+<br>&nbsp;&nbsp;}
+<br>}
+
+</div>
+</div>
+
+<h3>Step3: The listening apex service</h3>
+The gathered information is routed to the apex service. The basic implementation template will just output incoming data to the console.
+Fork the template project and extend it according to your needs.
+
+<div id="window">
+<div id="toolbar">
+  <div class="top">
+    <div id="lights">
+      <div class="light red">
+        <div class="glyph">×</div>
+        <div class="shine"></div>
+        <div class="glow"></div>
+      </div>
+      <div class="light yellow">
+        <div class="glyph">-</div>
+        <div class="shine"></div>
+        <div class="glow"></div>
+      </div>
+      <div class="light green">
+        <div class="glyph">+</div>
+        <div class="shine"></div>
+        <div class="glow"></div>
+      </div>
+    </div>
+    <div id="title">
+
+      apex service template
+    </div>
+    <div id="bubble">
+      <div class="shine"></div>
+      <div class="glow"></div>
+    </div>
+  </div>
+</div>
+<div id="body">
+  <span class="shell_prompt">$  mvn spring-boot:run</span>
+  <br><span class="shell_comment"># bootstrap omitted</span>
+  <br>...
+  <br>heartbeat 192.168.188.21 9f4ada0e81563c88dd66000e200a1dbb782c0438 COLLECTOR-CHnrN9gQcZ 1477574834051
+  <br>
+  <br>==========
+
+  <span class="shell_highlight"><br>application.org.apache.catalina.startup.HostConfig  2016-10-27T15:27:15.792+02:00</span>
+  <br>----------
+    <span class="shell_highlight"><br>deployments:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        [host-manager, manager]</span>
+  <br>@timestamp:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2016-10-27T15:27:15.792+02:00
+  <br>==========
+  <br>
+  <br>heartbeat 192.168.188.21 9f4ada0e81563c88dd66000e200a1dbb782c0438 COLLECTOR-CHnrN9gQcZ 1477574839051
+  <br>heartbeat 192.168.188.21 9f4ada0e81563c88dd66000e200a1dbb782c0438 COLLECTOR-CHnrN9gQcZ 1477574844055
+  <br>
+  ...
+
+</div>
+
+</div>

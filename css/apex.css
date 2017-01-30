@@ -190,7 +190,7 @@ body {
 
 .apex_title { font-family: 'Akashi';
 	  color: #116969;
-    font-size: 45px;
+    font-size: 65px;
     #text-shadow: -1px 0 #000, 0 1px #000, 1px 0 #000, 0 -1px #000;
 }
 
@@ -740,7 +740,7 @@ pre {
 
 h1, h2, h3, h4, h5 {
     color: #51a9a9;
-    padding-top: 1.2em;
+    //padding-top: 1.2em;
     // font-family: 'Roboto', sans-serif;
 
     font-family: 'Roboto Condensed', sans-serif;
@@ -748,7 +748,7 @@ h1, h2, h3, h4, h5 {
 
 .teaser h1, .teaser h3 {
     color: #91e9e9;
-    padding-top: 1.2em;
+    //padding-top: 1.2em;
 }
 
 .teaser {
@@ -793,4 +793,60 @@ h1, h2, h3, h4, h5 {
 .gitrepopanel > ul{
       list-style-type: none;
 
+}
+
+
+
+.featurepanelheaderframe{
+  color: #51a9a9;
+  background-color: #112;
+  border-color: #51a9a9;
+  -webkit-box-shadow: 0px 0px 200px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 200px 0px rgba(0,0,0,0.75);
+
+}
+
+.featurepanelheader {
+    color: #51a9a9;
+    background-color: #122;
+    border-color: #51a9a9;
+}
+
+.featurepanel {
+    //  background-color: #013939;
+
+}
+.featurepanel > ul{
+      list-style-type: none;
+
+}
+
+
+
+.teaserpanelheaderframe{
+  color: #51a9a9;
+  background-color: #122;
+  border-color: #51a9a9;
+  -webkit-box-shadow: 0px 0px 200px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 200px 0px rgba(0,0,0,0.75);
+
+}
+
+.teaserpanelheader {
+  color: #51a9a9;
+  background-color: #002929;
+  border-color: #51a9a9;
+}
+
+.teaserpanel {
+    background-color: #013939;
+
+}
+.teaserpanel > ul{
+      list-style-type: none;
+
+}
+
+.sectionspace {
+  padding-top: 5em;
 }
