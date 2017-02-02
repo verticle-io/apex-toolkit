@@ -3,9 +3,101 @@ layout: default
 title: apex data extraction toolkit - examples
 ---
 
-<h1>Example: Apache Tomcat</h1>
+<div class="sectionspace">
+<h1>Example 1: Spring Petclinic + Apexbeat + ELK</h1>
+
+<p>This demo connects the Petclinic example to Elasticsearch using the apex collector agent and apexbeat and will retrieve a set of metrics from the application and the underlying spring boot stack. </p>
+<br>
+<p>Apex will react on
+
+<ul>
+  <li>all HTTP requests to petclinic measuring performance and recording HTTP response states. </li>
+  <li>creation of new pet owners (recording their names)</li>
+  <li>creation of new pets (dumping complete instance contexts)</li>
+  <li>the triggered exception of the petclinic</li>
+</ul>
+</p>
+
+<div class="row">
+  <div class="col-md-5">
+    <div class="techimage">
+      <img src="{{site.baseurl}}/images/petclinic.png" class="img-responsive" alt="Responsive image">
+    </div>
+  </div>
+  <div class="col-md-5">
+    <br><br>
+    <div class="techimage">
+      <img src="{{site.baseurl}}/images/Petclinic_Dashboard_Kibana.png" class="img-responsive" alt="Responsive image">
+    </div>
+  </div>
+</div>
+
+<p>This example can be run locally using docker. You can modify and experiment with the APEX configs and scripts. Just clone and fire up the complete stack with docker-compose.</p>
+
+
+<div id="window">
+  <div id="toolbar">
+    <div class="top">
+      <div id="lights">
+        <div class="light red">
+          <div class="glyph">×</div>
+          <div class="shine"></div>
+          <div class="glow"></div>
+        </div>
+        <div class="light yellow">
+          <div class="glyph">-</div>
+          <div class="shine"></div>
+          <div class="glow"></div>
+        </div>
+        <div class="light green">
+          <div class="glyph">+</div>
+          <div class="shine"></div>
+          <div class="glow"></div>
+        </div>
+      </div>
+      <div id="title">
+
+        Spring Petclinic
+      </div>
+      <div id="bubble">
+        <div class="shine"></div>
+        <div class="glow"></div>
+      </div>
+    </div>
+  </div>
+  <div id="body">
+# clone the sample from github
+<br>
+git clone https://github.com/verticle-io/apex-petclinic-demo.git
+<br>
+<br># head to the repo root
+<br>cd apex-petclinic-demo
+<br>
+<br> # boot the stack
+<br>docker-compose up
+
+  </div>
+</div>
+
+<p>Visit the Github site for more details. All images are provided via Docker Hub.</p>
+
+<a href="https://github.com/verticle-io/apex-petclinic-demo" class="btn btn-success">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-github" aria-hidden="true"></i> Github &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+<a href="https://hub.docker.com/u/verticleio/" class="btn btn-primary"><i class="fa fa-cloud-download" aria-hidden="true"></i> Docker Hub &nbsp;&nbsp;&nbsp;</a><br><br>
+
+</div><!--sectionspace -->
+
+<br><br><br><br>
+
+
+
+
+
+
+<h1>Example 2: Apache Tomcat + APEX Collector + APEX Service</h1>
 
 <p>In order to get familiar with the mechanisms, we demonstrate how easy APEX can be applied to a standard Apache Tomcat Webserver, tracing the deployments done on the container. </p>
+
+
 
 
 <br>
